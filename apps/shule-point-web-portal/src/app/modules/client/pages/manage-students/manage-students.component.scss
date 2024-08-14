@@ -1,0 +1,490 @@
+@import 'apps/shule-point-web-portal/src/config';
+@import 'apps/shule-point-web-portal/src/utilities';
+
+#ManageStudentsPage {
+	width: 100%;
+	height: 100%;
+	container-type: size;
+
+	display: flex;
+	flex-flow: column nowrap;
+
+	color: $primary-blue;
+
+	#search-bar {
+		display: inline-block;
+		height: 10vh;
+		width: 100cqw;
+		padding: 2cqh 4cqw;
+		box-shadow: $shadow-bottom;
+
+		input {
+			&[type='text'] {
+				height: 6vh;
+				font-size: 2rem;
+				display: inline-block;
+				font-family: $font-main;
+				font-weight: 400;
+				border: none;
+				outline: none;
+				color: $primary-blue;
+				padding: 1cqh;
+				padding-right: 5vh;
+				width: 25vw;
+				position: absolute;
+				top: 0;
+				right: 6vh;
+				background: none;
+				transition: width 0.4s cubic-bezier(0, 0.795, 0, 1);
+				border-bottom: 1px solid $primary-blue;
+				cursor: text;
+			}
+
+			&[type='submit'] {
+				width: 5vh;
+				height: 5vh;
+				color: $danger;
+				float: right;
+				background: url(/assets/img/navIcons/search.png) 0 0 no-repeat;
+				background-size: contain;
+				text-indent: -10000px;
+				border: none;
+				position: relative;
+				cursor: pointer;
+				transition: opacity 0.2s ease;
+
+				&:hover {
+					opacity: 0.6;
+				}
+			}
+
+			&[type='reset'] {
+				width: 2.5vh;
+				height: 2.5vh;
+				color: $danger;
+				float: right;
+				right: 28.75vw;
+				top: 2.75vh;
+				background: url(/assets/img/navIcons/close.png) 0 0 no-repeat;
+				background-size: contain;
+				text-indent: -10000px;
+				border: none;
+				position: relative;
+				cursor: pointer;
+				transition: opacity 0.2s ease;
+
+				&:hover {
+					opacity: 0.6;
+				}
+			}
+		}
+	}
+
+	.noStudents {
+		margin-top: 20cqh;
+		width: 100%;
+		font-size: 3cqw;
+		font-weight: 500;
+		text-align: center;
+	}
+
+	.studentsContainer {
+		flex-shrink: 0;
+		width: 100cqw;
+		height: 82.5cqh;
+		display: flex;
+		flex-flow: row nowrap;
+		column-gap: 2cqw;
+		padding: 0 1.25cqw;
+
+		.studentFilters {
+			flex-shrink: 0;
+			width: 28cqw;
+			height: 60cqh;
+			background-color: rgba($color: $powder-blue, $alpha: 0.35);
+			border-radius: 1vh;
+			box-shadow: -0.5cqw 0.5cqw 1cqw rgba($color: $dark, $alpha: 0.15);
+			top: 7.5cqh;
+			padding: 2cqh 2cqw 3cqh;
+
+			.title {
+				font-weight: 700;
+				font-size: 1.25rem;
+				color: $primary-blue;
+				margin-bottom: 0.75rem;
+			}
+
+			.filter-row {
+				display: flex;
+				flex-flow: row nowrap;
+				align-items: center;
+				justify-content: flex-start;
+				width: 100%;
+
+				input + input {
+					margin-left: 1cqw;
+				}
+
+				.filter-group {
+					width: 100%;
+					display: flex;
+					flex-flow: column-reverse nowrap;
+					font-size: 1.75vh;
+					font-weight: 600;
+					color: $secondary-blue;
+					align-items: flex-start;
+
+					* {
+						transition: all ease-in-out 0.25s;
+					}
+
+					label.extra-info {
+						font-size: 1.5vh;
+						color: $secondary-blue;
+						font-weight: 600;
+					}
+
+					input,
+					select,
+					textarea {
+						width: 100%;
+						font-size: 2vh;
+						color: $secondary-blue;
+						padding: 0.5vh 1vh;
+						border-style: solid;
+						border-color: #757575;
+						border-radius: 1vh;
+
+						&:focus {
+							background: linear-gradient($white 0 0) padding-box,
+								linear-gradient(to bottom, $primary-blue, $secondary-blue) border-box;
+							border: 3px solid transparent;
+
+							& + label {
+								background: linear-gradient($primary-blue, $secondary-blue);
+								-webkit-background-clip: text;
+								background-clip: text;
+								-webkit-text-fill-color: transparent;
+							}
+						}
+					}
+
+					.input-box {
+						display: flex;
+						flex-flow: row nowrap;
+						align-items: center;
+						border: solid 2px #757575;
+						padding: 0.25cqh 0.45cqh;
+						border-radius: 1vh;
+
+						.prefix {
+							color: $secondary-blue;
+							font-size: 2vh;
+							width: 6vh;
+						}
+
+						input {
+							width: 100%;
+							font-size: 2vh;
+							color: $secondary-blue;
+							padding: 0.25cqh 0.45cqh;
+							border: none;
+						}
+
+						&:focus-within {
+							background: linear-gradient($white 0 0) padding-box,
+								linear-gradient(to bottom, $primary-blue, $secondary-blue) border-box;
+							border: 3px solid transparent;
+
+							& + label {
+								background: linear-gradient($primary-blue, $secondary-blue);
+								-webkit-background-clip: text;
+								background-clip: text;
+								-webkit-text-fill-color: transparent;
+							}
+						}
+					}
+
+					.radio-row {
+						width: 100%;
+						display: flex;
+						flex-direction: row;
+						justify-content: center;
+
+						.radio-group {
+							display: flex;
+							flex-direction: row;
+
+							& + .radio-group {
+								margin-left: 1vh;
+							}
+
+							input {
+								width: 0;
+								height: 0;
+								visibility: hidden;
+								margin: 0;
+
+								&:checked ~ label {
+									background: $secondary-blue;
+									border-color: $secondary-blue;
+									color: $white;
+								}
+							}
+
+							label {
+								padding: 1vh;
+								width: 6vh;
+								padding: 0.5vh;
+								font-size: 3vh;
+								border-radius: 1vh;
+								border: 2px solid $secondary-blue;
+								text-align: center;
+								line-height: 0.8;
+								color: $secondary-blue;
+								transition: all ease-in-out 0.125s;
+							}
+
+							input,
+							label {
+								cursor: pointer;
+							}
+						}
+					}
+
+					select {
+						border-width: 2px;
+					}
+
+					textarea {
+						border-width: 2px;
+						resize: none;
+					}
+
+					.check-group {
+						display: flex;
+						flex-direction: row;
+						align-items: flex-start;
+						margin-top: 1vh;
+
+						input {
+							width: auto;
+
+							&:focus {
+								& + label {
+									-webkit-text-fill-color: unset;
+								}
+							}
+
+							& + label {
+								margin-left: 10px;
+								line-height: 1;
+								color: $secondary-blue;
+
+								a {
+									color: $secondary-blue;
+									font-weight: 900;
+								}
+							}
+						}
+					}
+
+					& + .filter-group {
+						margin-left: 1vh;
+					}
+				}
+
+				& + .filter-row {
+					margin-top: 1vh;
+				}
+			}
+		}
+
+		.studentCards {
+			flex: 1 1 auto;
+			display: flex;
+			flex-flow: row wrap;
+			row-gap: 6cqh;
+			column-gap: 3cqw;
+			overflow: hidden;
+			overflow-y: auto;
+			padding: 5cqw 2cqw 2cqw;
+			align-content: flex-start;
+
+			.studentCard {
+				container-type: size;
+
+				flex-shrink: 0;
+				width: 30cqw;
+				height: 20cqh;
+				background-color: rgba($color: $powder-blue, $alpha: 0.35);
+				backdrop-filter: blur(45cqh);
+				border-radius: 1vh;
+				padding: 0.5cqh 2cqw;
+				box-shadow: -0.5cqw 0.5cqw 1cqw rgba($color: $dark, $alpha: 0.15);
+				transition: all 0.2s ease-in-out;
+				cursor: pointer;
+
+				&:hover {
+					background-color: rgba($color: $powder-blue, $alpha: 0.5);
+					transform: scale(1.1);
+				}
+
+				&:active {
+					transform: scale(1.05);
+				}
+
+				.studentPhoto {
+					position: absolute;
+					top: -15cqh;
+					right: 7.5cqw;
+					background: linear-gradient($white 0 0) padding-box,
+						linear-gradient(165deg, $powder-blue, $honeydew) border-box;
+					border: 1.5cqh solid transparent;
+					height: 65cqh;
+					width: 65cqh;
+					border-radius: 50%;
+					overflow: hidden;
+
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					img {
+						height: 100%;
+						width: auto;
+					}
+				}
+
+				.studentInfo {
+					top: 5cqh;
+					width: 100%;
+					height: 90cqh;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					overflow-y: auto;
+					font-size: 1rem;
+				}
+			}
+		}
+	}
+
+	nav[data-pagination] {
+		font-size: 8pt;
+		line-height: 1;
+		font-weight: 400;
+		-webkit-text-size-adjust: 100%;
+		margin: 1.25vh auto;
+		text-align: center;
+		transition: font-size 0.2s ease-in-out;
+
+		&,
+		& *,
+		& *:before,
+		& *:after {
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			text-rendering: optimizeLegibility;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			font-kerning: auto;
+		}
+
+		ul {
+			list-style-type: none;
+			display: inline;
+			font-size: 100%;
+			margin: 0;
+			padding: 0.5em;
+
+			li {
+				display: inline-block;
+				font-size: 100%;
+				width: auto;
+				border-radius: 3px;
+				cursor: pointer;
+
+				&.current {
+					background: $powder-blue;
+					padding: 0.25vh;
+					font-weight: 600;
+				}
+
+				a {
+					color: $primary-blue;
+					font-size: 100%;
+					padding: 0.5em;
+
+					&:focus,
+					&:hover {
+						color: $secondary-blue;
+					}
+				}
+
+				/* Disabled & Hidden Styles */
+			}
+		}
+
+		a {
+			font-size: 140%;
+			cursor: pointer;
+
+			&.disabled,
+			&[hidden],
+			&[disabled] {
+				opacity: 0.5;
+				pointer-events: none;
+			}
+		}
+
+		@media (min-width: 700px) {
+			font-size: 14pt;
+		}
+		@media (min-width: 900px) {
+			font-size: 16pt;
+		}
+	}
+
+	button.addStudent {
+		position: absolute;
+		bottom: 2cqh;
+		right: 2cqh;
+
+		width: 8cqw;
+		height: 4.5cqw;
+		border-radius: 5cqh;
+
+		background: $primary-blue;
+		color: $white;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:hover {
+			-webkit-filter: brightness(115%);
+			filter: brightness(115%);
+		}
+
+		.studentIcon {
+			fill: $white;
+			width: 2.25cqw;
+			position: absolute;
+		}
+
+		svg.svg-inline--fa {
+			top: -1.25cqh;
+			right: -1.25cqw;
+
+			font-size: 1.35cqw;
+
+			background-color: $white;
+			fill: $primary-blue;
+
+			border-radius: 50%;
+
+			color: $primary-blue;
+		}
+	}
+}

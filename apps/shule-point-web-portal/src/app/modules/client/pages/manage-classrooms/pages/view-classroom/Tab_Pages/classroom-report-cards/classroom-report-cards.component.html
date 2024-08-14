@@ -1,0 +1,101 @@
+<div class="reports-body">
+	<div class="students">
+		<div
+			*ngFor="let student of getAvailableStudents()"
+			(click)="openStudentReportCardModal(student.studentID)"
+			class="student"
+		>
+			<img src="./assets/img/navIcons/report-card.svg" onload="SVGInject(this)" />
+			<div class="studentName">
+				{{ student.studentName }}
+			</div>
+		</div>
+	</div>
+
+	<ng-template #ViewStudentReportCardModal>
+		<div class="modal w-65 h-80">
+			<div class="header">
+				<div class="title">View {{ currentStudent.fullname }}'s Report Card</div>
+				<button type="button" (click)="closeModal()" class="close">
+					<i class="fas fa-close"></i>
+				</button>
+			</div>
+			<div class="body">
+				<div class="studentInformation">
+					<div class="personalInformation">
+						<div class="studentPhoto">
+							<img src="{{ currentStudent.photo }}" alt="studentPhoto" />
+						</div>
+						<div class="details">
+							<div class="detail">
+								<div class="label">Full Name:</div>
+								{{ currentStudent.fullname }}
+							</div>
+							<div class="detail">
+								<div class="label">Grade Level:</div>
+								{{ currentStudent.gradeLevel }}
+							</div>
+						</div>
+					</div>
+
+					<div class="progressReports">
+						<div class="title">Progress Reports for {{ currentStudent.gradeLevel }}</div>
+						<div class="reportCards-container">
+							<div class="accordion">
+								<details
+									*ngFor="let reportCard of currentStudent.progressReport"
+									id="{{ reportCard.schoolTerm }}/{{ reportCard.year }}"
+								>
+									<summary>
+										{{ reportCard.schoolTerm }}
+
+										<button
+											type="button"
+											(click)="deleteReportCard(reportCard.schoolTerm, reportCard.gradeLevel)"
+											class="delete"
+										>
+											<i class="fas fa-trash"></i>
+										</button>
+									</summary>
+									<div class="accordion-content">
+										<table>
+											<tr>
+												<th>Subject</th>
+												<th *ngFor="let assessment of reportCard.termAssessments">
+													<button
+														type="button"
+														(click)="editReportCard(reportCard.schoolTerm, assessment.name)"
+														class="edit"
+													>
+														<i class="fas fa-pen-to-square"></i>
+													</button>
+
+													({{ assessment.value * 100 }}%) <br />
+													{{ assessment.name }}
+												</th>
+												<th>Total</th>
+											</tr>
+											<tr *ngFor="let assessment of reportCard.assessments">
+												<td>
+													{{ assessment.subject }}
+												</td>
+												<td class="marks" *ngFor="let subjectAssessment of assessment.assessments">
+													{{ subjectAssessment.marks }}
+												</td>
+												<td class="totalMarks">
+													{{ assessment.totalScore }}
+												</td>
+											</tr>
+										</table>
+									</div>
+								</details>
+							</div>
+						</div>
+
+						<button (click)="createStudentReport()" type="button" class="createReport">New Report</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-template>
+</div>

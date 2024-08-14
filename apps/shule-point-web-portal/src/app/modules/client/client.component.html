@@ -1,0 +1,85 @@
+<main id="clientDashboardPage">
+	<div class="topBar">
+		<div class="logo"><img src="./assets/img/LogoMain.svg" onload="SVGInject(this)" /></div>
+		<div class="userItems">
+			welcome,
+			<span class="firstName"> {{ user.firstName }} {{ user.lastName![0] }}. </span>
+			<span class="userRole">({{ user.userRole }})</span>
+		</div>
+	</div>
+	<div class="pageBody">
+		<div class="sideNav">
+			<div class="schoolInfo">
+				<div class="schoolLogo">
+					<img src="{{ school.logo }}" alt="schoolLogo" />
+				</div>
+				<div class="Name">{{ school.name }}</div>
+				<div class="ShortName">({{ school.shortName }})</div>
+				<div class="RegNumber">Reg. Number: {{ school.registrationNumber }}</div>
+			</div>
+			<div class="navItems">
+				<div class="navItem">
+					<div class="btn" routerLink="/dashboard/home" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/home.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Home</div>
+					</div>
+				</div>
+				<div class="navItem">
+					<div class="btn" routerLink="/dashboard/manage-classrooms" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/classrooms.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Manage Classrooms</div>
+					</div>
+				</div>
+				<div *ngIf="user.userRole == 'SchoolAdmin'" class="navItem">
+					<div class="btn" routerLink="/dashboard/manage-students" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/students.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Manage Students</div>
+					</div>
+				</div>
+				<div *ngIf="user.userRole == 'SchoolAdmin'" class="navItem">
+					<div class="btn" routerLink="/dashboard/manage-staffs" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/teachers.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Manage Staffs</div>
+					</div>
+				</div>
+				<div *ngIf="user.userRole == 'SchoolAdmin'" class="navItem">
+					<div class="btn" routerLink="/dashboard/manage-school" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/schools.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Manage School</div>
+					</div>
+				</div>
+				<div *ngIf="user.userRole == 'SchoolAdmin'" class="navItem">
+					<div class="btn" routerLink="/dashboard/activity-reports" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/reports.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Activity Reports</div>
+					</div>
+				</div>
+			</div>
+			<div class="functionItems">
+				<div (click)="logout()" title="Log Out" class="btn logOut">
+					<img src="./assets/img/navIcons/logOut.svg" onload="SVGInject(this)" />
+				</div>
+			</div>
+		</div>
+		<div class="dashRouterContent">
+			<div class="router-container">
+				<router-outlet></router-outlet>
+			</div>
+		</div>
+	</div>
+	<div class="bottomBar">
+		<div class="copyright">Copyrights &copy; 2022 ShulePoint&trade;</div>
+	</div>
+</main>

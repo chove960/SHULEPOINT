@@ -1,0 +1,61 @@
+<main id="adminDashboardPage">
+	<div class="topBar">
+		<div class="logo"><img src="./assets/img/LogoMain.svg" onload="SVGInject(this)" /></div>
+		<div class="userItems">
+			welcome,
+			<span class="firstName"> {{ user.firstName }} {{ user.lastName![0] }}. </span>
+			<span class="userRole">({{ user.userRole }})</span>
+		</div>
+	</div>
+	<div class="pageBody">
+		<div class="sideNav">
+			<div class="navItems">
+				<div class="navItem">
+					<div class="btn" routerLink="/admin/home" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/home.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Home</div>
+					</div>
+				</div>
+				<div class="navItem">
+					<div class="btn" routerLink="/admin/manage-schools" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/schools.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Manage Schools</div>
+					</div>
+				</div>
+				<div class="navItem">
+					<div class="btn" routerLink="/admin/sys-admins" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/sysAdmins.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Sys. Admins</div>
+					</div>
+				</div>
+				<div class="navItem">
+					<div class="btn" routerLink="/admin/sys-reports" routerLinkActive="active">
+						<div class="icon">
+							<img src="./assets/img/navIcons/reports.svg" onload="SVGInject(this)" />
+						</div>
+						<div class="text">Sys. Reports</div>
+					</div>
+				</div>
+			</div>
+			<div class="functionItems">
+				<div (click)="logout()" title="Log Out" class="btn logOut">
+					<img src="./assets/img/navIcons/logOut.svg" onload="SVGInject(this)" />
+				</div>
+			</div>
+		</div>
+		<div class="dashRouterContent">
+			<div class="router-container">
+				<router-outlet></router-outlet>
+			</div>
+		</div>
+	</div>
+	<div class="bottomBar">
+		<div class="copyright">Copyrights &copy; 2022 ShulePoint&trade;</div>
+	</div>
+</main>

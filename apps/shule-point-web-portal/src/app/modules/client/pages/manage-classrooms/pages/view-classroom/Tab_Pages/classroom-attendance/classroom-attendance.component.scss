@@ -1,0 +1,275 @@
+@import 'apps/shule-point-web-portal/src/config';
+@import 'apps/shule-point-web-portal/src/utilities';
+
+.attendance-body {
+	width: 100cqw;
+	height: 67.5cqh;
+	overflow: hidden;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 2vh 2vw;
+
+	.calendar-wrapper {
+		width: 60cqw;
+		height: 95%;
+		background: $white;
+		border-radius: 10px;
+		box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.12);
+
+		header {
+			display: flex;
+			align-items: center;
+			padding: 25px 30px 10px;
+			justify-content: space-between;
+
+			.icons {
+				display: flex;
+
+				#prev,
+				#next {
+					padding: 5px 7.5px;
+					margin: 0 1px;
+					cursor: pointer;
+					color: $secondary-blue;
+					text-align: center;
+					line-height: 1;
+					font-size: 1.5rem;
+					user-select: none;
+					border-radius: 50%;
+
+					&:last-child {
+						margin-right: -10px;
+					}
+
+					&:hover {
+						background: $powder-blue;
+					}
+
+					&:active {
+						transform: scale(0.95);
+					}
+				}
+			}
+
+			.current-date {
+				font-size: 1.45rem;
+				font-weight: 800;
+				text-transform: uppercase;
+			}
+		}
+
+		.calendar {
+			padding: 20px;
+
+			ul {
+				display: flex;
+				flex-wrap: wrap;
+				list-style: none;
+				text-align: center;
+
+				li {
+					color: $dark;
+					width: calc(100% / 7);
+					font-size: 1.25rem;
+				}
+
+				&.weeks {
+					li {
+						font-weight: 600;
+						cursor: default;
+
+						&:nth-child(7n + 1) {
+							color: $danger;
+							font-weight: 800;
+						}
+					}
+				}
+
+				&.days {
+					margin-bottom: 20px;
+
+					li {
+						z-index: 1;
+						cursor: pointer;
+						position: relative;
+						margin-top: 30px;
+						font-weight: 500;
+
+						&:nth-child(7n + 1) {
+							color: $danger;
+							font-weight: 800;
+						}
+
+						&.inactive {
+							color: $gray;
+
+							&:hover::before {
+								background: none;
+							}
+
+							&:active {
+								transform: none;
+							}
+						}
+
+						&.selected {
+							&::before {
+								background: $powder-blue;
+							}
+						}
+
+						&.active {
+							color: $white;
+
+							&::before {
+								background: $primary-blue;
+							}
+						}
+
+						&::before {
+							position: absolute;
+							content: '';
+							left: 50%;
+							top: 50%;
+							height: 40px;
+							width: 40px;
+							z-index: -1;
+							border-radius: 50%;
+							transform: translate(-50%, -50%);
+						}
+
+						&:not(.active) {
+							&:not(.inactive):hover::before {
+								background: rgba($color: $powder-blue, $alpha: 0.5);
+							}
+						}
+
+						&:active {
+							transform: scale(0.95);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.attendance-wrapper {
+		width: 32.5cqw;
+		height: 95%;
+		background: $white;
+		border-radius: 10px;
+		box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.12);
+
+		header {
+			display: flex;
+			align-items: center;
+			padding: 25px 30px 10px;
+			justify-content: flex-end;
+			align-items: flex-end;
+			line-height: 0.8;
+			font-weight: 600;
+			font-size: 1.125rem;
+			color: $primary-blue;
+
+			span {
+				margin-left: 0.6rem;
+				font-size: 1.65rem;
+				font-weight: 800;
+				color: $secondary-blue;
+			}
+		}
+
+		.attendance {
+			width: 100%;
+			height: calc(60cqh * 0.8);
+
+			.noRecords {
+				width: 100%;
+				display: flex;
+				justify-content: center;
+				text-align: center;
+				font-weight: 700;
+				color: $primary-blue;
+				font-size: 1.45rem;
+				margin-top: 35px;
+			}
+
+			button.createAttendance {
+				position: absolute;
+				bottom: 0.75cqh;
+				right: 0.75cqh;
+
+				width: 6cqw;
+				height: 3.75cqw;
+				border-radius: 5cqh;
+
+				background: $primary-blue;
+				color: $white;
+
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				&:hover {
+					-webkit-filter: brightness(115%);
+					filter: brightness(115%);
+				}
+
+				.classroomIcon {
+					fill: $white;
+					width: 2.65cqw;
+					position: absolute;
+					top: 1.25cqh;
+				}
+
+				svg.svg-inline--fa {
+					top: -1.5cqh;
+					right: -1.5cqw;
+
+					font-size: 1.35cqw;
+
+					background-color: $white;
+					fill: $primary-blue;
+
+					border-radius: 50%;
+
+					color: $primary-blue;
+				}
+			}
+			.attendanceList {
+				width: 100%;
+				display: flex;
+				justify-content: center;
+
+				table {
+					width: 92.5%;
+					border-collapse: collapse;
+
+					th {
+						text-align: left;
+						background-color: $secondary-blue;
+						color: $white;
+						padding: 0.5vh 2vh;
+
+						&:first-child {
+							border-top-left-radius: 0.65rem;
+						}
+
+						&:last-child {
+							border-top-right-radius: 0.65rem;
+						}
+					}
+
+					td {
+						padding: 0 0.5cqw;
+						&.status {
+							text-align: center;
+							width: 10cqw;
+						}
+					}
+				}
+			}
+		}
+	}
+}

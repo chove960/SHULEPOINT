@@ -1,0 +1,211 @@
+@import 'apps/shule-point-web-portal/src/config';
+@import 'apps/shule-point-web-portal/src/utilities';
+
+#adminViewSchoolPage {
+	width: 100%;
+	height: 100%;
+	container-type: size;
+
+	display: flex;
+	flex-flow: column nowrap;
+	overflow: hidden;
+	overflow-y: auto;
+	row-gap: 3cqh;
+
+	color: $primary-blue;
+
+	align-items: center;
+
+	.backButton {
+		position: absolute;
+		top: 1cqh;
+		left: 1cqw;
+		background-color: transparent;
+		border: none;
+		color: $secondary-blue;
+		box-shadow: none;
+		padding: 0.25vh 1vh;
+		transition: background-color 0.125s ease-in-out;
+		transition: transform 0.25s ease-in-out;
+
+		svg {
+			font-size: 1.75cqw;
+		}
+
+		&:hover {
+			background-color: rgba($color: $honeydew, $alpha: 0.45);
+			backdrop-filter: blur(10cqh);
+			border-radius: 2rem;
+		}
+
+		&:active {
+			transform: scale(0.9);
+		}
+	}
+
+	.schoolInfoContainer {
+		width: 100%;
+		height: 25cqh;
+		background-color: rgba($color: $white, $alpha: 0.45);
+		backdrop-filter: blur(10cqh);
+		padding: 3cqw 5cqw;
+		box-shadow: 0cqw 0.5cqw 1cqw rgba($color: $dark, $alpha: 0.15);
+
+		display: flex;
+		flex-flow: row nowrap;
+		column-gap: 2cqw;
+		align-items: flex-start;
+		line-height: 1;
+
+		.schoolLogo {
+			background: linear-gradient($white 0 0) padding-box, linear-gradient(165deg, $powder-blue, $honeydew) border-box;
+			border: 0.5cqh solid transparent;
+			width: 10cqw;
+			height: 10cqw;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			overflow: hidden;
+			border-radius: 50%;
+
+			img {
+				height: 100%;
+			}
+		}
+
+		.schoolInfo {
+			display: flex;
+			flex-flow: column nowrap;
+			align-items: center;
+
+			.Name {
+				font-size: 2.125cqw;
+				font-weight: 500;
+			}
+			.ShortName {
+				font-size: 1.75cqw;
+				font-weight: 700;
+				text-transform: uppercase;
+			}
+
+			.Address {
+				width: 100%;
+				margin-top: 1.25cqw;
+				font-size: 1.25cqw;
+				font-weight: 500;
+			}
+		}
+
+		.contactInfo {
+			display: flex;
+			flex-flow: column;
+			row-gap: 0.25cqh;
+			align-self: flex-end;
+			position: absolute;
+			right: 2cqw;
+			bottom: 1cqh;
+
+			.phoneNumber {
+				font-size: 1.75cqw;
+				font-weight: 500;
+			}
+			.email {
+				font-size: 1.5cqw;
+				font-weight: 500;
+			}
+			.website {
+				font-size: 1.5cqw;
+				font-weight: 500;
+			}
+		}
+	}
+
+	.adminsContainer {
+		width: 100%;
+		height: 25cqh;
+		overflow: hidden;
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+		padding: 0 2cqw;
+
+		.title {
+			font-size: 2.25cqh;
+			font-weight: 700;
+			line-height: 1;
+			left: 2.25cqw;
+		}
+
+		button.addSchoolAdmin {
+			position: absolute;
+			bottom: 1.85cqh;
+			right: 2.75cqw;
+
+			width: 8cqw;
+			height: 4.5cqw;
+			border-radius: 5cqh;
+
+			background: $primary-blue;
+			color: $white;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			&:hover {
+				-webkit-filter: brightness(115%);
+				filter: brightness(115%);
+			}
+
+			.schoolIcon {
+				fill: $white;
+				width: 3.5cqw;
+				position: absolute;
+			}
+
+			svg.svg-inline--fa {
+				line-height: 1;
+				padding: 0 0.125cqw;
+				top: -1cqh;
+				right: -1.5cqw;
+
+				font-size: 1.75cqw;
+
+				background-color: $white;
+				fill: $primary-blue;
+
+				border-radius: 50%;
+
+				color: $primary-blue;
+			}
+		}
+
+		.cardsContainer {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			overflow-x: auto;
+			display: flex;
+			flex-flow: row nowrap;
+			align-items: center;
+			column-gap: 2cqw;
+			padding: 0 1cqw;
+			align-content: flex-start;
+
+			.adminCard {
+				display: flex;
+				flex-flow: column nowrap;
+
+				flex-shrink: 0;
+
+				width: 22.5cqw;
+				height: 15cqh;
+				background-color: rgba($color: $white, $alpha: 0.85);
+				border-radius: 1cqh;
+				padding: 0.5% 1%;
+
+				box-shadow: -0.5cqw 0.5cqw 0.75cqw rgba($color: $dark, $alpha: 0.25);
+			}
+		}
+	}
+}

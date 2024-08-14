@@ -1,0 +1,62 @@
+<div id="ViewClassroomPage">
+	<div class="classroomInfoContainer">
+		<div class="classroomInfo">
+			<div class="Name">{{ classroom.name }}</div>
+			<div style="margin-top: 2.5cqh">
+				Class Teacher: {{ classroom.classTeacher.teacherName }} <br />
+				Students: {{ getSeatsFilled(classroom.students) }}/{{ classroom.students.length }}
+			</div>
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="header">
+			<div class="tabs-container">
+				<div (click)="setActiveTab('Overview')" class="tab-item">
+					<div [ngClass]="{ show: activeTab === 'Overview' }" class="active-indicator"></div>
+					<div class="tab-title">Overview</div>
+				</div>
+				<div (click)="setActiveTab('Attendance')" class="tab-item">
+					<div [ngClass]="{ show: activeTab === 'Attendance' }" class="active-indicator"></div>
+					<div class="tab-title">Attendance</div>
+				</div>
+				<div (click)="setActiveTab('Report Cards')" class="tab-item">
+					<div [ngClass]="{ show: activeTab === 'Report Cards' }" class="active-indicator"></div>
+					<div class="tab-title">Report Cards</div>
+				</div>
+				<div (click)="setActiveTab('Reference Materials')" class="tab-item">
+					<div [ngClass]="{ show: activeTab === 'Reference Materials' }" class="active-indicator"></div>
+					<div class="tab-title">Reference Materials</div>
+				</div>
+			</div>
+		</div>
+		<div class="body">
+			<div class="classroomTab-view" [hidden]="activeTab !== 'Overview'" id="overview">
+				<div class="tab-content">
+					<shule-point-sis-classroom-overview [classroom]="classroom"></shule-point-sis-classroom-overview>
+				</div>
+			</div>
+			<div class="classroomTab-view" [hidden]="activeTab !== 'Attendance'" id="attendance">
+				<div class="tab-content">
+					<shule-point-sis-classroom-attendance [classroom]="classroom"></shule-point-sis-classroom-attendance>
+				</div>
+			</div>
+			<div class="classroomTab-view" [hidden]="activeTab !== 'Report Cards'" id="reportCards">
+				<div class="tab-content">
+					<shule-point-sis-classroom-report-cards [classroom]="classroom"></shule-point-sis-classroom-report-cards>
+				</div>
+			</div>
+			<div class="classroomTab-view" [hidden]="activeTab !== 'Reference Materials'" id="referenceMaterials">
+				<div class="tab-content">
+					<shule-point-sis-classroom-reference-materials
+						[classroom]="classroom"
+					></shule-point-sis-classroom-reference-materials>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<button class="backButton" routerLink="../../../manage-classrooms">
+		<i class="fas fa-arrow-left"></i>
+	</button>
+</div>

@@ -1,0 +1,284 @@
+<div id="ManageSchoolPage">
+	<div class="schoolInfoContainer">
+		<div class="schoolLogo">
+			<img src="{{ school.logo }}" alt="{{ school.name }}_Logo" />
+		</div>
+
+		<div class="schoolInfo">
+			<div class="Name">{{ school.name }}</div>
+			<div class="ShortName">({{ school.shortName }})</div>
+			<div class="RegNumber">Reg. Number: {{ school.registrationNumber }}</div>
+			<div class="Address">
+				{{ school.address.state }}, <br />
+				{{ getCountryName(school.address.country) }}
+			</div>
+		</div>
+		<div class="contactInfo">
+			<div class="phoneNumber">
+				{{ getFullPhoneNumber(school.address.country, school.phoneNumber) }}
+			</div>
+			<div class="email">
+				{{ school.email }}
+			</div>
+			<div class="website">
+				{{ school.website }}
+			</div>
+		</div>
+	</div>
+
+	<div class="schoolPageBody">
+		<section class="GradeLevelsContainer">
+			<div class="header">
+				<div class="title">Grade Levels</div>
+				<button title="Add Grade Level" (click)="openGradeLevelModal()" class="addGradeLevel">
+					<i class="fa fa-plus"></i>
+				</button>
+			</div>
+			<div class="body">
+				<div *ngIf="school.gradeLevels.length < 1" class="noItems">
+					You Haven't Added Any Grade Levels For Your School
+				</div>
+
+				<div *ngFor="let gradeLevel of school.gradeLevels" class="gradeLevelCard">
+					<div class="gradeLevelName">
+						{{ gradeLevel.name }}
+						<button type="button" (click)="deleteGradeLevel(gradeLevel.name)" class="delete">
+							<i class="fas fa-trash"></i>
+						</button>
+					</div>
+					<ul>
+						<li *ngFor="let subject of gradeLevel.subjectsOffered">
+							{{ subject }}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<section class="SchoolTermsContainer">
+			<div class="header">
+				<div class="title">School Terms</div>
+				<button title="Add School Term" (click)="openSchoolTermModal()" class="addSchoolTerm">
+					<i class="fa fa-plus"></i>
+				</button>
+			</div>
+			<div class="body">
+				<div *ngIf="school.schoolTerms.length < 1" class="noItems">You Haven't Set Any Terms For Your School</div>
+
+				<div *ngFor="let schoolTerm of school.schoolTerms" class="schoolTermCard">
+					<div class="schoolTermName">
+						{{ schoolTerm.name }}
+						<button type="button" (click)="deleteSchoolTerm(schoolTerm.name)" class="delete">
+							<i class="fas fa-trash"></i>
+						</button>
+					</div>
+					<ul>
+						<li *ngFor="let assessment of schoolTerm.assessmentsRequired">
+							{{ assessment.label }} - {{ $any(assessment.value) * 100 }}%
+						</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<ng-template #addGradeLevelModal>
+	<div class="modal w-30 h-40">
+		<div class="header">
+			<div class="title">Add Grade Level</div>
+			<button type="button" (click)="closeModal()" class="close">
+				<i class="fas fa-close"></i>
+			</button>
+		</div>
+		<div class="body">
+			<form (ngSubmit)="onSubmitGradeLevel(newGradeLevelForm)" #newGradeLevelForm="ngForm">
+				<div class="form-fields">
+					<div class="form-row">
+						<div class="input-group">
+							<input
+								name="gradeLevelName"
+								type="text"
+								[(ngModel)]="newGradeLevel.name"
+								#newGradeLevelName="ngModel"
+								required
+								[ngClass]="{
+									'is-invalid': newGradeLevelName.errors && newGradeLevelName.touched
+								}"
+							/>
+							<label>Name</label>
+							<div
+								*ngIf="newGradeLevelName.invalid && (newGradeLevelName.dirty || newGradeLevelName.touched)"
+								class="error-alerts"
+							>
+								<div *ngIf="newGradeLevelName.errors?.['required']">this is required!</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="input-group">
+							<label class="extra-info"> **Separate multiple subjects using a comma "," </label>
+							<textarea
+								name="gradeLevelSubjects"
+								rows="5"
+								[(ngModel)]="newGradeLevel.subjectsOffered"
+								#newGradeLevelSubjectsOffered="ngModel"
+								required
+								[ngClass]="{
+									'is-invalid': newGradeLevelSubjectsOffered.errors && newGradeLevelSubjectsOffered.touched
+								}"
+							></textarea>
+							<label>Subjects Offered</label>
+							<div
+								*ngIf="
+									newGradeLevelSubjectsOffered.invalid &&
+									(newGradeLevelSubjectsOffered.dirty || newGradeLevelSubjectsOffered.touched)
+								"
+								class="error-alerts"
+							>
+								<div *ngIf="newGradeLevelSubjectsOffered.errors?.['required']">this is required!</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<button class="formButton">Save</button>
+			</form>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #addSchoolTermModal>
+	<div class="modal w-30 h-60">
+		<div class="header">
+			<div class="title">Add School Term</div>
+			<button type="button" (click)="closeModal()" class="close">
+				<i class="fas fa-close"></i>
+			</button>
+		</div>
+		<div class="body">
+			<form (ngSubmit)="onSubmitSchoolTerm(newSchoolTermForm)" #newSchoolTermForm="ngForm">
+				<div class="form-fields">
+					<div class="form-row">
+						<div class="input-group">
+							<input
+								name="schoolTermName"
+								type="text"
+								[(ngModel)]="newSchoolTerm.name"
+								#newSchoolTermName="ngModel"
+								required
+								[ngClass]="{
+									'is-invalid': newSchoolTermName.errors && newSchoolTermName.touched
+								}"
+							/>
+							<label>Name</label>
+							<div
+								*ngIf="newSchoolTermName.invalid && (newSchoolTermName.dirty || newSchoolTermName.touched)"
+								class="error-alerts"
+							>
+								<div *ngIf="newSchoolTermName.errors?.['required']">this is required!</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="input-group">
+							<select
+								name="startMonth"
+								[(ngModel)]="newSchoolTerm.startMonth"
+								#newSchoolTermStartMonth="ngModel"
+								required
+								[ngClass]="{
+									'is-invalid': newSchoolTermStartMonth.errors && newSchoolTermStartMonth.touched
+								}"
+							>
+								<option value="">Select Term Start</option>
+								<option *ngFor="let month of months" [ngValue]="month">{{ month }}</option>
+							</select>
+							<label>Term Start</label>
+							<div
+								*ngIf="
+									newSchoolTermStartMonth.invalid &&
+									(newSchoolTermStartMonth.dirty || newSchoolTermStartMonth.touched)
+								"
+								class="error-alerts"
+							>
+								<div *ngIf="newSchoolTermStartMonth.errors?.['required']">this is required!</div>
+							</div>
+						</div>
+						<div class="input-group">
+							<select
+								name="endMonth"
+								[(ngModel)]="newSchoolTerm.endMonth"
+								#newSchoolTermEndMonth="ngModel"
+								required
+								[ngClass]="{
+									'is-invalid': newSchoolTermEndMonth.errors && newSchoolTermEndMonth.touched
+								}"
+							>
+								<option value="">Select Term End</option>
+								<option *ngFor="let month of months" [ngValue]="month">{{ month }}</option>
+							</select>
+							<label>Term End</label>
+							<div
+								*ngIf="
+									newSchoolTermEndMonth.invalid &&
+									(newSchoolTermEndMonth.dirty || newSchoolTermEndMonth.touched)
+								"
+								class="error-alerts"
+							>
+								<div *ngIf="newSchoolTermEndMonth.errors?.['required']">this is required!</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="input-group">
+							<button (click)="addAssessmentInputRow()" type="button" class="add-groupSetItem">
+								<i class="fas fa-plus"></i>
+							</button>
+							<div class="form-groupSets">
+								<div *ngIf="newSchoolTerm.assessmentsRequired.length > 0" class="groupSet">
+									<div class="label">Assessment Name</div>
+									<div class="label">Assessment Value</div>
+								</div>
+								<div *ngFor="let assessment of newSchoolTerm.assessmentsRequired" class="groupSet">
+									<input
+										type="text"
+										placeholder="e.g: Mid Terms"
+										[value]="assessment.label"
+										id="assessmentInputLabel-{{ assessment.id }}"
+										required
+									/>
+									<input
+										type="text"
+										placeholder="e.g: 0.15 for 15%"
+										[value]="assessment.value"
+										id="assessmentInputValue-{{ assessment.id }}"
+										required
+									/>
+									<button
+										type="button"
+										(click)="removeAssessmentInputRow(assessment.id)"
+										class="remove-groupSetItem"
+									>
+										<i class="fas fa-trash"></i>
+									</button>
+								</div>
+							</div>
+							<label class="extra-info">**Evaluation Values Must Add Up To 1!</label>
+							<label class="extra-info">**Please Enter By Descending Order!</label>
+							<label>Term Evaluations</label>
+							<!-- <div
+								*ngIf="newGradeLevelSubjectsOffered.invalid && (newGradeLevelSubjectsOffered.dirty || newGradeLevelSubjectsOffered.touched)"
+								class="error-alerts"
+							>
+								<div *ngIf="newGradeLevelSubjectsOffered.errors?.['required']">this is required!</div>
+							</div> -->
+						</div>
+					</div>
+				</div>
+				<button class="formButton">Save</button>
+			</form>
+		</div>
+	</div>
+</ng-template>

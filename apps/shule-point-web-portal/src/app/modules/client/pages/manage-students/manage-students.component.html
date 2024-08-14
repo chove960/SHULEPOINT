@@ -1,0 +1,868 @@
+<div id="ManageStudentsPage">
+	<div id="search-bar">
+		<form (ngSubmit)="onSearchStudentSubmit(searchStudentForm)" #searchStudentForm="ngForm" autocomplete="off">
+			<input id="cancel_search" *ngIf="isSearching" (click)="cancelSearch()" type="reset" />
+			<input
+				id="search"
+				name="search"
+				type="text"
+				placeholder="Who are we looking for?"
+				(change)="setNewSearch()"
+				[(ngModel)]="searchInputText"
+				#newStudentFullName="ngModel"
+			/>
+			<input id="search_submit" type="submit" />
+		</form>
+	</div>
+
+	<div *ngIf="students.length < 1" class="noStudents">No Students Have Been Registered For Your School Yet!</div>
+	<div class="studentsContainer">
+		<div class="studentCards">
+			<div *ngFor="let student of students" (click)="openViewStudentModal(student.studentID)" class="studentCard">
+				<div class="studentPhoto">
+					<img src="{{ student.photo }}" alt="{{ student.fullname }}-photo" />
+				</div>
+				<div class="studentInfo">
+					<h2>{{ student.fullname }}</h2>
+					<strong>{{ student.studentID }}</strong> <br />
+
+					<strong>Gender:</strong> {{ student.gender.toUpperCase() }} <br />
+					<strong>Grade:</strong> {{ student.gradeLevel }} <br />
+					<strong>Age:</strong> {{ getAge(student.dateOfBirth) }} years <br />
+					<strong>Verification Code:</strong>
+					<strong style="font-size: 1.2rem; float: right; margin-right: 35cqw">{{
+						student.verificationCode
+					}}</strong>
+				</div>
+			</div>
+		</div>
+
+		<div class="studentFilters">
+			<div class="title">Filter Students</div>
+
+			<div class="filter-row">
+				<div class="filter-group">
+					<select name="gradeLevel" id="filter-gradeLevel" (change)="filterStudents('gradeLevel', $event.target)">
+						<option [selected]="studentFilters.gradeLevel == 'all'" value="all">All</option>
+						<option
+							*ngFor="let gradeLevel of school.gradeLevels"
+							[selected]="studentFilters.gradeLevel == gradeLevel.name"
+							[ngValue]="gradeLevel.name"
+						>
+							{{ gradeLevel.name }}
+						</option>
+					</select>
+					<label>Grade Level</label>
+				</div>
+			</div>
+
+			<div class="filter-row">
+				<div class="filter-group">
+					<div class="radio-row">
+						<div class="radio-group">
+							<input
+								type="radio"
+								value="all"
+								name="studentGender"
+								checked
+								(change)="filterStudents('gender', $event.target)"
+								id="gender-all"
+								required
+							/>
+							<label for="gender-all"> <i class="fas fa-person-half-dress"></i> </label>
+						</div>
+						<div class="radio-group">
+							<input
+								type="radio"
+								value="male"
+								name="studentGender"
+								(change)="filterStudents('gender', $event.target)"
+								id="gender-male"
+							/>
+							<label for="gender-male"> <i class="fas fa-male"></i> </label>
+						</div>
+						<div class="radio-group">
+							<input
+								type="radio"
+								value="female"
+								name="studentGender"
+								(change)="filterStudents('gender', $event.target)"
+								id="gender-female"
+							/>
+							<label for="gender-female"> <i class="fas fa-female"></i> </label>
+						</div>
+					</div>
+					<label>Gender</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<nav *ngIf="totalPages > 1" data-pagination>
+		<a (click)="setActivePage(activePage - 1)" [class.disabled]="activePage == 1 ? true : null"
+			><i class="fas fa-chevron-left"></i
+		></a>
+		<ul>
+			<li *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{ current: activePage == i + 1 }">
+				<a (click)="setActivePage(i + 1)">{{ i + 1 }}</a>
+			</li>
+		</ul>
+
+		<a (click)="setActivePage(+activePage + +1)" [class.disabled]="activePage == totalPages ? true : null"
+			><i class="fas fa-chevron-right"></i
+		></a>
+	</nav>
+
+	<ng-template #newStudentModal>
+		<div class="modal w-40 h-70">
+			<div class="header">
+				<div class="title">Register New Student</div>
+				<button type="button" (click)="closeModal()" class="close">
+					<i class="fas fa-close"></i>
+				</button>
+			</div>
+			<div class="body">
+				<form (ngSubmit)="onNewStudentSubmit(newStudentForm)" #newStudentForm="ngForm">
+					<ul class="stepsIndicator">
+						<li [ngClass]="{ active: studentFormStep == 'step1' }" class="stepIndicator"></li>
+						<li [ngClass]="{ active: studentFormStep == 'step2' }" class="stepIndicator"></li>
+						<li [ngClass]="{ active: studentFormStep == 'step3' }" class="stepIndicator"></li>
+					</ul>
+
+					<div [ngClass]="{ show: studentFormStep === 'step1' }" class="formStep" id="step1">
+						<div class="stepTitle">Student Information</div>
+						<shule-point-web-portal-sq-image-uploader
+							(newPicEvent)="setStudentPhotoValue($event)"
+						></shule-point-web-portal-sq-image-uploader>
+						<div class="form-fields">
+							<div class="form-row">
+								<div class="input-group">
+									<input
+										name="studentFullName"
+										type="text"
+										[(ngModel)]="newStudent.fullname"
+										#newStudentFullName="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentFullName.errors && newStudentFullName.touched
+										}"
+									/>
+									<label>Full Name</label>
+									<div
+										*ngIf="
+											newStudentFullName.invalid &&
+											(newStudentFullName.dirty || newStudentFullName.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentFullName.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+								<div class="input-group" style="width: 40cqw">
+									<input
+										name="studentID"
+										type="text"
+										[(ngModel)]="newStudent.studentID"
+										#newStudentID="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentID.errors && newStudentID.touched
+										}"
+									/>
+									<label>Student ID</label>
+									<div
+										*ngIf="newStudentID.invalid && (newStudentID.dirty || newStudentID.touched)"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentID.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+								<div class="input-group" style="width: 35cqw">
+									<select
+										name="studentGradeLevel"
+										[(ngModel)]="newStudent.gradeLevel"
+										#newStudentGradeLevel="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentGradeLevel.errors && newStudentGradeLevel.touched
+										}"
+									>
+										<option selectedvalue="">Select Grade Level</option>
+										<option *ngFor="let gradeLevel of school.gradeLevels" [ngValue]="gradeLevel.name">
+											{{ gradeLevel.name }}
+										</option>
+									</select>
+									<label>Grade Level</label>
+									<div
+										*ngIf="
+											newStudentGradeLevel.invalid &&
+											(newStudentGradeLevel.dirty || newStudentGradeLevel.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentGradeLevel.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="input-group">
+									<input
+										name="studentDateOfBirth"
+										type="date"
+										[(ngModel)]="newStudent.dateOfBirth"
+										[ngClass]="{
+											'is-invalid': newStudentDateOfBirth.errors && newStudentDateOfBirth.touched
+										}"
+										min="1965-01-01"
+										max="{{ maxDateOfBirth | date: 'yyyy-MM-dd' }}"
+										#newStudentDateOfBirth="ngModel"
+										required
+									/>
+
+									<label>Date Of Birth</label>
+									<div *ngIf="newStudentDateOfBirth.invalid" class="error-alerts">
+										<div *ngIf="newStudentDateOfBirth.errors?.['required']">this is required!</div>
+										<div *ngIf="newStudentDateOfBirth.errors?.['min']">too old</div>
+										<div *ngIf="newStudentDateOfBirth.errors?.['max']">too young</div>
+									</div>
+								</div>
+								<div class="input-group" style="width: 40cqw">
+									<div class="radio-row">
+										<div class="radio-group">
+											<input
+												type="radio"
+												value="male"
+												name="studentGender"
+												[(ngModel)]="newStudent.gender"
+												id="gender-male"
+												required
+												[ngClass]="{
+													'is-invalid': studentGender.invalid && studentGender.touched
+												}"
+												#studentGender="ngModel"
+											/>
+											<label for="gender-male">
+												<i class="fas fa-male"></i>
+											</label>
+										</div>
+										<div class="radio-group">
+											<input
+												type="radio"
+												value="female"
+												name="studentGender"
+												[(ngModel)]="newStudent.gender"
+												id="gender-female"
+												required
+												[ngClass]="{
+													'is-invalid': studentGender.invalid && studentGender.touched
+												}"
+												#studentGender="ngModel"
+											/>
+											<label for="gender-female">
+												<i class="fas fa-female"></i>
+											</label>
+										</div>
+									</div>
+									<label>Gender</label>
+									<div *ngIf="studentGender.invalid && (studentGender.dirty || studentGender.touched)" class="error-alerts">
+										<div *ngIf="studentGender.errors?.['required']">This is required!</div>
+									</div>
+								</div>
+
+							</div>
+							<div class="form-row">
+								<div class="input-group">
+									<input
+										name="studentStreetAddress"
+										type="text"
+										[(ngModel)]="newStudent.address.streetAddress"
+										#newStudentAddressStreetAddress="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid':
+												newStudentAddressStreetAddress.errors &&
+												newStudentAddressStreetAddress.touched
+										}"
+									/>
+									<label>Street Address</label>
+									<div
+										*ngIf="
+											newStudentAddressStreetAddress.invalid &&
+											(newStudentAddressStreetAddress.dirty || newStudentAddressStreetAddress.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentAddressStreetAddress.errors?.['required']">
+											this is required!
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="input-group">
+									<input
+										name="studentCity"
+										type="text"
+										[(ngModel)]="newStudent.address.city"
+										#newStudentAddressCity="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentAddressCity.errors && newStudentAddressCity.touched
+										}"
+									/>
+									<label>City</label>
+									<div
+										*ngIf="
+											newStudentAddressCity.invalid &&
+											(newStudentAddressCity.dirty || newStudentAddressCity.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentAddressCity.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+								<div class="input-group" style="width: 75cqw">
+									<input
+										name="studentState"
+										type="text"
+										[(ngModel)]="newStudent.address.state"
+										#newStudentAddressState="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentAddressState.invalid && newStudentAddressState.touched
+										}"
+									/>
+									<label>State</label>
+									<div *ngIf="newStudentAddressState.invalid && (newStudentAddressState.dirty || newStudentAddressState.touched)" class="error-alerts">
+										<div *ngIf="newStudentAddressState.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+								<div class="input-group" style="width: 25cqw">
+									<input
+										name="studentCountry"
+										type="text"
+										[(ngModel)]="newStudent.address.country"
+										#newStudentAddressCountry="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentAddressCountry.invalid && newStudentAddressCountry.touched
+										}"
+									/>
+									<label>Country</label>
+									<div *ngIf="newStudentAddressCountry.invalid && (newStudentAddressCountry.dirty || newStudentAddressCountry.touched)" class="error-alerts">
+										<div *ngIf="newStudentAddressCountry.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						<button type="button" class="changeStep next" (click)="setFormStep('step2')">next</button>
+					</div>
+
+					<div [ngClass]="{ show: studentFormStep === 'step2' }" class="formStep" id="step2">
+						<div class="stepTitle">Father's Information</div>
+						<div class="form-fields">
+							<div class="form-row">
+								<div class="input-group">
+									<input
+										name="fatherFullName"
+										type="text"
+										[(ngModel)]="newStudent.parentalInformation.fatherInfo.fullname"
+										#newStudentFatherFullname="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentFatherFullname.errors && newStudentFatherFullname.touched
+										}"
+									/>
+									<label>Full Name</label>
+									<div
+										*ngIf="
+											newStudentFatherFullname.invalid &&
+											(newStudentFatherFullname.dirty || newStudentFatherFullname.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentFatherFullname.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="input-group">
+									<input
+										name="fatherStreetAddress"
+										type="text"
+										[(ngModel)]="newStudent.parentalInformation.fatherInfo.address.streetAddress"
+										#newStudentFatherAddressStreetAddress="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid':
+												newStudentFatherAddressStreetAddress.errors &&
+												newStudentFatherAddressStreetAddress.touched
+										}"
+									/>
+									<label>Street Address</label>
+									<div
+										*ngIf="
+											newStudentFatherAddressStreetAddress.invalid &&
+											(newStudentFatherAddressStreetAddress.dirty ||
+												newStudentFatherAddressStreetAddress.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentFatherAddressStreetAddress.errors?.['required']">
+											this is required!
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="input-group">
+									<select
+										id="selectFatherCountry"
+										name="fatherCountry"
+										(change)="loadFatherStates($event.target); loadFatherPhoneCountryCode($event.target)"
+										[(ngModel)]="newStudent.parentalInformation.fatherInfo.address.country"
+										#newStudentFatherAddressCountry="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid':
+												newStudentFatherAddressCountry.errors &&
+												newStudentFatherAddressCountry.touched
+										}"
+									>
+										<option value="">Select Country</option>
+									</select>
+									<label>Country</label>
+									<div
+										*ngIf="
+											newStudentFatherAddressCountry.invalid &&
+											(newStudentFatherAddressCountry.dirty || newStudentFatherAddressCountry.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentFatherAddressCountry.errors?.['required']">
+											this is required!
+										</div>
+									</div>
+								</div>
+								<div class="input-group">
+									<select
+										id="selectFatherState"
+										name="fatherState"
+										[(ngModel)]="newStudent.parentalInformation.fatherInfo.address.state"
+										#newStudentFatherAddressState="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid':
+												newStudentFatherAddressState.errors && newStudentFatherAddressState.touched
+										}"
+									>
+										<option value="">Select State</option>
+									</select>
+									<label>State</label>
+									<div
+										*ngIf="
+											newStudentFatherAddressState.invalid &&
+											(newStudentFatherAddressState.dirty || newStudentFatherAddressState.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentFatherAddressState.errors?.['required']">
+											this is required!
+										</div>
+									</div>
+								</div>
+								<div class="input-group" style="width: 55cqw">
+									<input
+										name="fatherCity"
+										type="text"
+										[(ngModel)]="newStudent.parentalInformation.fatherInfo.address.city"
+										#newStudentFatherAddressCity="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid':
+												newStudentFatherAddressCity.errors && newStudentFatherAddressCity.touched
+										}"
+									/>
+									<label>City</label>
+									<div
+										*ngIf="
+											newStudentFatherAddressCity.invalid &&
+											(newStudentFatherAddressCity.dirty || newStudentFatherAddressCity.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentFatherAddressCity.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="input-group">
+									<div
+										id="inputFatherMobileNumber"
+										class="input-box"
+										[ngClass]="{
+											'is-invalid':
+												newStudentFatherPhoneNumber.errors && newStudentFatherPhoneNumber.touched
+										}"
+									>
+										<span class="prefix"></span>
+										<input
+											name="fatherPhoneNumber"
+											type="tel"
+											[(ngModel)]="newStudent.parentalInformation.fatherInfo.phoneNumber"
+											#newStudentFatherPhoneNumber="ngModel"
+											required
+										/>
+									</div>
+									<label>Phone Number</label>
+									<div
+										*ngIf="
+											newStudentFatherPhoneNumber.invalid &&
+											(newStudentFatherPhoneNumber.dirty || newStudentFatherPhoneNumber.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentFatherPhoneNumber.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+								<div class="input-group">
+									<input
+										name="fatherEmail"
+										type="email"
+										[(ngModel)]="newStudent.parentalInformation.fatherInfo.email"
+										#newStudentFatherEmail="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentFatherEmail.errors && newStudentFatherEmail.touched
+										}"
+									/>
+									<label>Email</label>
+									<div
+										*ngIf="
+											newStudentFatherEmail.invalid &&
+											(newStudentFatherEmail.dirty || newStudentFatherEmail.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentFatherEmail.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<button type="button" class="changeStep prev" (click)="setFormStep('step1')">back</button>
+						<button type="button" class="changeStep next" (click)="setFormStep('step3')">next</button>
+					</div>
+
+					<div [ngClass]="{ show: studentFormStep === 'step3' }" class="formStep" id="step3">
+						<div class="stepTitle">Mother's Information</div>
+						<div class="form-fields">
+							<div class="form-row">
+								<div class="input-group">
+									<input
+										name="motherFullName"
+										type="text"
+										[(ngModel)]="newStudent.parentalInformation.motherInfo.fullname"
+										#newStudentMotherFullname="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentMotherFullname.errors && newStudentMotherFullname.touched
+										}"
+									/>
+									<label>Full Name</label>
+									<div
+										*ngIf="
+											newStudentMotherFullname.invalid &&
+											(newStudentMotherFullname.dirty || newStudentMotherFullname.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentMotherFullname.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="input-group">
+									<input
+										name="motherStreetAddress"
+										type="text"
+										[(ngModel)]="newStudent.parentalInformation.motherInfo.address.streetAddress"
+										#newStudentMotherAddressStreetAddress="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid':
+												newStudentMotherAddressStreetAddress.errors &&
+												newStudentMotherAddressStreetAddress.touched
+										}"
+									/>
+									<label>Street Address</label>
+									<div
+										*ngIf="
+											newStudentMotherAddressStreetAddress.invalid &&
+											(newStudentMotherAddressStreetAddress.dirty ||
+												newStudentMotherAddressStreetAddress.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentMotherAddressStreetAddress.errors?.['required']">
+											this is required!
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="input-group">
+									<select
+										id="selectMotherCountry"
+										name="motherCountry"
+										(change)="loadMotherStates($event.target); loadMotherPhoneCountryCode($event.target)"
+										[(ngModel)]="newStudent.parentalInformation.motherInfo.address.country"
+										#newStudentMotherAddressCountry="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid':
+												newStudentMotherAddressCountry.errors &&
+												newStudentMotherAddressCountry.touched
+										}"
+									>
+										<option value="">Select Country</option>
+									</select>
+									<label>Country</label>
+									<div
+										*ngIf="
+											newStudentMotherAddressCountry.invalid &&
+											(newStudentMotherAddressCountry.dirty || newStudentMotherAddressCountry.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentMotherAddressCountry.errors?.['required']">
+											this is required!
+										</div>
+									</div>
+								</div>
+								<div class="input-group">
+									<select
+										id="selectMotherState"
+										name="motherState"
+										[(ngModel)]="newStudent.parentalInformation.motherInfo.address.state"
+										#newStudentMotherAddressState="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid':
+												newStudentMotherAddressState.errors && newStudentMotherAddressState.touched
+										}"
+									>
+										<option value="">Select State</option>
+									</select>
+									<label>State</label>
+									<div
+										*ngIf="
+											newStudentMotherAddressState.invalid &&
+											(newStudentMotherAddressState.dirty || newStudentMotherAddressState.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentMotherAddressState.errors?.['required']">
+											this is required!
+										</div>
+									</div>
+								</div>
+								<div class="input-group" style="width: 55cqw">
+									<input
+										name="motherCity"
+										type="text"
+										[(ngModel)]="newStudent.parentalInformation.motherInfo.address.city"
+										#newStudentMotherAddressCity="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid':
+												newStudentMotherAddressCity.errors && newStudentMotherAddressCity.touched
+										}"
+									/>
+									<label>City</label>
+									<div
+										*ngIf="
+											newStudentMotherAddressCity.invalid &&
+											(newStudentMotherAddressCity.dirty || newStudentMotherAddressCity.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentMotherAddressCity.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="input-group">
+									<div
+										id="inputMotherMobileNumber"
+										class="input-box"
+										[ngClass]="{
+											'is-invalid':
+												newStudentMotherPhoneNumber.errors && newStudentMotherPhoneNumber.touched
+										}"
+									>
+										<span class="prefix"></span>
+										<input
+											name="motherPhoneNumber"
+											type="tel"
+											[(ngModel)]="newStudent.parentalInformation.motherInfo.phoneNumber"
+											#newStudentMotherPhoneNumber="ngModel"
+											required
+										/>
+									</div>
+									<label>Phone Number</label>
+									<div
+										*ngIf="
+											newStudentMotherPhoneNumber.invalid &&
+											(newStudentMotherPhoneNumber.dirty || newStudentMotherPhoneNumber.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentMotherPhoneNumber.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+								<div class="input-group">
+									<input
+										name="motherEmail"
+										type="email"
+										[(ngModel)]="newStudent.parentalInformation.motherInfo.email"
+										#newStudentMotherEmail="ngModel"
+										required
+										[ngClass]="{
+											'is-invalid': newStudentMotherEmail.errors && newStudentMotherEmail.touched
+										}"
+									/>
+									<label>Email</label>
+									<div
+										*ngIf="
+											newStudentMotherEmail.invalid &&
+											(newStudentMotherEmail.dirty || newStudentMotherEmail.touched)
+										"
+										class="error-alerts"
+									>
+										<div *ngIf="newStudentMotherEmail.errors?.['required']">this is required!</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<button type="button" class="changeStep prev" (click)="setFormStep('step2')">back</button>
+						<button class="formButton" type="submit">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</ng-template>
+
+	<ng-template #viewStudentModal>
+		<div class="modal w-50 h-70">
+			<div class="header">
+				<div class="title">View Student</div>
+				<button type="button" (click)="openEditStudentModal(currentStudent.studentID)" class="edit">
+					<i class="fas fa-edit"></i>
+				</button>
+				<button type="button" (click)="closeModal()" class="close">
+					<i class="fas fa-close"></i>
+				</button>
+			</div>
+			<div class="body">
+				<div class="studentInformation">
+					<div class="personalInformation">
+						<div class="studentPhoto">
+							<img src="{{ currentStudent.photo }}" alt="studentPhoto" />
+						</div>
+						<div class="details">
+							<div class="detail">
+								<div class="label">Full Name:</div>
+								{{ currentStudent.fullname }}
+							</div>
+							<div class="detail">
+								<div class="label">Grade Level:</div>
+								{{ currentStudent.gradeLevel }}
+							</div>
+							<div class="detail">
+								<div class="label">Gender:</div>
+								{{ currentStudent.gender.toUpperCase() }}
+							</div>
+							<div class="detail">
+								<div class="label">Age:</div>
+								{{ getAge(currentStudent.dateOfBirth) }}
+							</div>
+							<div class="detail">
+								<div class="label">Address:</div>
+								{{ currentStudent.address.streetAddress }}, <br />
+								{{ currentStudent.address.city }}
+							</div>
+						</div>
+					</div>
+
+					<div class="parentalInformation">
+						<div class="parentInfo">
+							<div class="title">Father's Information</div>
+							<div class="details">
+								<div class="detail">
+									<div class="label">Full Name:</div>
+									{{ currentStudent.parentalInformation.fatherInfo.fullname }}
+								</div>
+								<div class="detail">
+									<div class="label">Contact Number:</div>
+									{{ currentStudent.parentalInformation.fatherInfo.phoneNumber }}
+								</div>
+								<div class="detail">
+									<div class="label">Email:</div>
+									{{ currentStudent.parentalInformation.fatherInfo.email }}
+								</div>
+								<div class="detail">
+									<div class="label">Address:</div>
+									{{ currentStudent.parentalInformation.fatherInfo.address.streetAddress }}, <br />
+									{{ currentStudent.parentalInformation.fatherInfo.address.city }}
+								</div>
+							</div>
+						</div>
+						<div class="parentInfo">
+							<div class="title">Mother's Information</div>
+							<div class="details">
+								<div class="detail">
+									<div class="label">Full Name:</div>
+									{{ currentStudent.parentalInformation.motherInfo.fullname }}
+								</div>
+								<div class="detail">
+									<div class="label">Contact Number:</div>
+									{{ currentStudent.parentalInformation.motherInfo.phoneNumber }}
+								</div>
+								<div class="detail">
+									<div class="label">Email:</div>
+									{{ currentStudent.parentalInformation.motherInfo.email }}
+								</div>
+								<div class="detail">
+									<div class="label">Address:</div>
+									{{ currentStudent.parentalInformation.motherInfo.address.streetAddress }}, <br />
+									{{ currentStudent.parentalInformation.motherInfo.address.city }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-template>
+
+	<ng-template #editStudentModal>
+		<div class="modal w-50 h-70">
+			<div class="header">
+				<div class="title">Update Student {{ currentStudent.fullname }}</div>
+				<button type="button" (click)="closeModal()" class="close">
+					<i class="fas fa-close"></i>
+				</button>
+			</div>
+			<div class="body"></div>
+		</div>
+	</ng-template>
+
+	<button title="Register New Student" (click)="openNewStudentModal()" class="addStudent">
+		<img src="./assets/img/navIcons/students.svg" class="studentIcon" onload="SVGInject(this)" />
+		<i class="fas fa-plus"></i>
+	</button>
+</div>

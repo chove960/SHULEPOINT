@@ -1,0 +1,1217 @@
+@import './config';
+@import './utilities';
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	position: relative;
+	user-select: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+	&:focus {
+		outline: none;
+	}
+
+	&::-webkit-scrollbar {
+		width: 0.425vh;
+		height: 0.425vh;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: 10px;
+		background: $secondary-blue;
+	}
+
+	&:-webkit-autofill,
+	&:-webkit-autofill:hover,
+	&:-webkit-autofill:focus,
+	&:-webkit-autofill:active {
+		box-shadow: 0 0 0 30px $honeydew inset !important;
+		-webkit-text-fill-color: $primary-blue !important;
+		-webkit-text-size-adjust: none;
+		border: 2px solid transparent;
+		transition: background-color 50000s ease-in-out 0s;
+	}
+
+	button,
+	input[type='button'] {
+		border: none;
+		transition: all ease-in-out 0.05s;
+		cursor: pointer;
+		box-shadow: -4px 4px 8px rgba($color: $dark, $alpha: 0.475);
+
+		&:active {
+			transform: scale(0.95);
+			box-shadow: -2px 2px 8px rgba($color: $dark, $alpha: 0.475);
+		}
+	}
+}
+
+body,
+html {
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+	font-family: $font-main;
+	background: $white;
+}
+
+.cdk-overlay-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	& :has([id^='cdk-overlay-']) {
+		&:not([id='cdk-overlay-0']) {
+			& ~ .modal-shadow {
+				background-color: transparent;
+			}
+		}
+	}
+}
+
+.swal2-container {
+	* {
+		border-radius: 1vh !important;
+
+		.swal2-icon {
+			border-radius: 50% !important;
+
+			&.swal2-success .swal2-success-ring {
+				border-radius: 50% !important;
+			}
+		}
+
+		&:focus {
+			box-shadow: none !important;
+		}
+	}
+
+	.form-row {
+		display: flex;
+		flex-flow: row nowrap;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100%;
+
+		input + input {
+			margin-left: 1cqw;
+		}
+
+		.input-group {
+			width: 100%;
+			display: flex;
+			flex-flow: column-reverse nowrap;
+			font-size: 1.75vh;
+			font-weight: 600;
+			color: $secondary-blue;
+			align-items: flex-start;
+
+			* {
+				transition: all ease-in-out 0.25s;
+			}
+
+			label.extra-info {
+				font-size: 1.5vh;
+				color: $secondary-blue;
+				font-weight: 600;
+			}
+
+			input,
+			select,
+			textarea {
+				width: 100%;
+				font-size: 2vh;
+				color: $secondary-blue;
+				padding: 0.5vh 1vh;
+				border-style: solid;
+				border-color: #757575;
+				border-radius: 1vh;
+
+				&:focus {
+					background: linear-gradient($white 0 0) padding-box,
+						linear-gradient(to bottom, $primary-blue, $secondary-blue) border-box;
+					border: 3px solid transparent;
+
+					& + label {
+						background: linear-gradient($primary-blue, $secondary-blue);
+						-webkit-background-clip: text;
+						background-clip: text;
+						-webkit-text-fill-color: transparent;
+					}
+				}
+
+				&.is-invalid {
+					background: linear-gradient($white 0 0) padding-box,
+						linear-gradient(lighten($color: $danger, $amount: 15), darken($color: $danger, $amount: 15))
+							border-box;
+					border: 3px solid transparent;
+
+					& ~ label {
+						background: linear-gradient(
+							lighten($color: $danger, $amount: 15),
+							darken($color: $danger, $amount: 15)
+						);
+						-webkit-background-clip: text;
+						background-clip: text;
+						-webkit-text-fill-color: transparent;
+					}
+				}
+			}
+
+			.input-box {
+				display: flex;
+				flex-flow: row nowrap;
+				align-items: center;
+				border: solid 2px #757575;
+				padding: 0.25cqh 0.45cqh;
+				border-radius: 1vh;
+
+				.prefix {
+					color: $secondary-blue;
+					font-size: 2vh;
+					width: 6vh;
+				}
+
+				input {
+					width: 100%;
+					font-size: 2vh;
+					color: $secondary-blue;
+					padding: 0.25cqh 0.45cqh;
+					border: none;
+				}
+
+				&:focus-within {
+					background: linear-gradient($white 0 0) padding-box,
+						linear-gradient(to bottom, $primary-blue, $secondary-blue) border-box;
+					border: 3px solid transparent;
+
+					& + label {
+						background: linear-gradient($primary-blue, $secondary-blue);
+						-webkit-background-clip: text;
+						background-clip: text;
+						-webkit-text-fill-color: transparent;
+					}
+				}
+
+				&.is-invalid {
+					background: linear-gradient($white 0 0) padding-box,
+						linear-gradient(lighten($color: $danger, $amount: 15), darken($color: $danger, $amount: 15))
+							border-box;
+					border: 3px solid transparent;
+
+					& + label {
+						background: linear-gradient(
+							lighten($color: $danger, $amount: 15),
+							darken($color: $danger, $amount: 15)
+						);
+						-webkit-background-clip: text;
+						background-clip: text;
+						-webkit-text-fill-color: transparent;
+					}
+				}
+			}
+
+			.radio-row {
+				width: 100%;
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+
+				.radio-group {
+					display: flex;
+					flex-direction: row;
+
+					& + .radio-group {
+						margin-left: 1vh;
+					}
+
+					input {
+						width: 0;
+						height: 0;
+						visibility: hidden;
+						margin: 0;
+
+						&:checked ~ label {
+							background: $secondary-blue;
+							border-color: $secondary-blue;
+							color: $white;
+						}
+					}
+
+					label {
+						padding: 1vh;
+						width: 6vh;
+						padding: 0.5vh;
+						font-size: 3vh;
+						border-radius: 1vh;
+						border: 2px solid $secondary-blue;
+						text-align: center;
+						line-height: 0.8;
+						color: $secondary-blue;
+						transition: all ease-in-out 0.125s;
+					}
+
+					input,
+					label {
+						cursor: pointer;
+					}
+				}
+			}
+
+			select {
+				border-width: 2px;
+			}
+
+			textarea {
+				border-width: 2px;
+				resize: none;
+			}
+
+			.check-group {
+				display: flex;
+				flex-direction: row;
+				align-items: flex-start;
+				margin-top: 1vh;
+
+				input {
+					width: auto;
+
+					&:focus {
+						& + label {
+							-webkit-text-fill-color: unset;
+						}
+					}
+
+					& + label {
+						margin-left: 10px;
+						line-height: 1;
+						color: $secondary-blue;
+
+						a {
+							color: $secondary-blue;
+							font-weight: 900;
+						}
+					}
+				}
+			}
+
+			.error-alerts {
+				position: absolute;
+				width: 100%;
+				bottom: -2vh;
+				font-size: 1.5vh;
+				padding-left: 0.5vh;
+				text-align: right;
+				display: flex;
+				flex-flow: column nowrap;
+
+				* {
+					background: linear-gradient(lighten($color: $danger, $amount: 15), darken($color: $danger, $amount: 15));
+					-webkit-background-clip: text;
+					background-clip: text;
+					-webkit-text-fill-color: transparent;
+				}
+			}
+
+			& + .input-group {
+				margin-left: 1vh;
+			}
+		}
+
+		& + .form-row {
+			margin-top: 1vh;
+		}
+	}
+}
+
+.modal-container {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	overflow-y: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.modal-shadow {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba($color: $dark, $alpha: 0.6);
+	top: 0;
+	left: 0;
+}
+
+.modal {
+	display: flex;
+	background-color: $white;
+	border-radius: 1vh;
+	align-self: center;
+	flex-flow: column nowrap;
+	position: absolute;
+
+	container-type: size;
+
+	&.w-10 {
+		width: 10vw;
+	}
+	&.w-20 {
+		width: 20vw;
+	}
+	&.w-30 {
+		width: 30vw;
+	}
+	&.w-40 {
+		width: 40vw;
+	}
+	&.w-50 {
+		width: 50vw;
+	}
+	&.w-55 {
+		width: 55vw;
+	}
+	&.w-60 {
+		width: 60vw;
+	}
+	&.w-65 {
+		width: 65vw;
+	}
+	&.w-70 {
+		width: 70vw;
+	}
+	&.w-80 {
+		width: 80vw;
+	}
+	&.w-90 {
+		width: 90vw;
+	}
+	&.w-100 {
+		width: 100vw;
+	}
+
+	&.h-10 {
+		height: 10vh;
+	}
+	&.h-20 {
+		height: 20vh;
+	}
+	&.h-30 {
+		height: 30vh;
+	}
+	&.h-40 {
+		height: 40vh;
+	}
+	&.h-50 {
+		height: 50vh;
+	}
+	&.h-60 {
+		height: 60vh;
+	}
+	&.h-70 {
+		height: 70vh;
+	}
+	&.h-80 {
+		height: 80vh;
+	}
+	&.h-90 {
+		height: 90vh;
+	}
+	&.h-100 {
+		height: 100vh;
+	}
+
+	.header {
+		width: 100%;
+		height: 6.5vh;
+		box-shadow: $shadow-bottom;
+		display: flex;
+		flex-flow: row nowrap;
+		align-items: center;
+		padding: 0 2vh;
+
+		.title {
+			color: $secondary-blue;
+			font-size: 2.75vh;
+			font-weight: 700;
+		}
+
+		.edit {
+			background-color: $secondary-blue;
+			position: absolute;
+			right: 5vh;
+			padding: 0.5vh 1.25vh;
+			color: $white;
+			border-radius: 1vh;
+
+			i {
+				font-size: 2vh;
+			}
+		}
+
+		.close {
+			background-color: $danger;
+			position: absolute;
+			right: 1vh;
+			padding: 0.5vh 1.25vh;
+			color: $white;
+			border-radius: 1vh;
+
+			i {
+				font-size: 2vh;
+			}
+		}
+	}
+
+	.body {
+		height: 100%;
+		width: 100%;
+		overflow: hidden;
+		overflow-y: auto;
+
+		.studentInformation {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			overflow-y: auto;
+			padding-top: 3vh;
+
+			.personalInformation {
+				padding: 0 2vw;
+				display: flex;
+				justify-content: space-between;
+				width: 100%;
+				align-items: flex-end;
+
+				.studentPhoto {
+					width: 20cqw;
+					height: 20cqw;
+					max-width: 9rem;
+					max-height: 9rem;
+					background: linear-gradient($white 0 0) padding-box,
+						linear-gradient(to bottom, $primary-blue, $secondary-blue) border-box;
+					border: 3px solid transparent;
+					border-radius: 1vh;
+					overflow: hidden;
+
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					img {
+						width: 100%;
+					}
+				}
+
+				.details {
+					display: flex;
+					flex-flow: column;
+					width: 60cqw;
+					line-height: 1;
+
+					.detail {
+						font-size: 2.4vh;
+						font-weight: 700;
+						color: $secondary-blue;
+						display: flex;
+						align-items: flex-end;
+						text-align: right;
+
+						.label {
+							font-size: 2vh;
+							font-weight: 500;
+							color: $primary-blue;
+							margin-right: 1vh;
+						}
+
+						& + .detail {
+							margin-top: 0.25vh;
+						}
+					}
+				}
+			}
+
+			.parentalInformation {
+				margin-top: 3vh;
+				padding: 0 2vw;
+				display: flex;
+				justify-content: space-between;
+				width: 100%;
+				align-items: flex-end;
+
+				.parentInfo {
+					width: 45cqw;
+					background-color: rgba($color: $powder-blue, $alpha: 0.4);
+					border-radius: 1cqh;
+					padding: 2cqh 2.5cqw 3cqh;
+
+					.title {
+						font-size: 2.5vh;
+						font-weight: 700;
+						color: $primary-blue;
+					}
+
+					.details {
+						display: flex;
+						flex-flow: column;
+						line-height: 1;
+						margin-top: 1vh;
+
+						.detail {
+							font-size: 2.25vh;
+							font-weight: 600;
+							color: $secondary-blue;
+							display: flex;
+							align-items: flex-end;
+							text-align: right;
+
+							.label {
+								font-size: 2vh;
+								font-weight: 500;
+								color: $primary-blue;
+								margin-right: 1vh;
+							}
+
+							& + .detail {
+								margin-top: 0.25vh;
+							}
+						}
+					}
+				}
+			}
+
+			.progressReports {
+				margin-top: 3vh;
+				padding: 0 2vw;
+				display: flex;
+				flex-flow: column nowrap;
+				justify-content: space-between;
+				width: 100%;
+				align-items: flex-start;
+
+				.title {
+					font-weight: 600;
+					color: $secondary-blue;
+					font-size: 2vh;
+				}
+
+				.reportCards-container {
+					display: flex;
+					height: 55cqh;
+					width: 100%;
+
+					.accordion {
+						color: $secondary-blue;
+						width: 100%;
+						overflow-y: auto;
+						flex-shrink: 0;
+
+						display: flex;
+						flex-flow: row wrap;
+
+						row-gap: 1vh;
+						column-gap: 0.5vw;
+						align-content: flex-start;
+						justify-items: center;
+
+						details {
+							width: 46.5cqw;
+
+							summary {
+								display: flex;
+								flex-flow: row wrap;
+
+								button {
+									padding: 0.75vh 1.5vh;
+									background-color: $danger;
+									color: $white;
+									border-radius: 0.5vh;
+
+									&.delete {
+										background-color: $danger;
+										position: absolute;
+										right: 1vh;
+										padding: 0.5vh 1.25vh;
+										color: $white;
+										border-radius: 1vh;
+
+										i {
+											font-size: 2vh;
+										}
+									}
+								}
+							}
+
+							.accordion-content {
+								border-left: 2px solid $primary-blue;
+								border-right: 2px solid $primary-blue;
+								border-bottom: 2px solid $primary-blue;
+								padding: 1vh 0.5vh;
+								border-bottom-left-radius: 1vh;
+								border-bottom-right-radius: 1vh;
+
+								table {
+									border-collapse: collapse;
+									width: 100%;
+
+									th {
+										text-align: center;
+										width: fit-content;
+										padding: 0.75cqh 1cqw 0.75cqh;
+										vertical-align: bottom;
+										line-height: 0.9;
+
+										& + th {
+											border-left: 2px solid $primary-blue;
+										}
+
+										button {
+											box-shadow: none;
+											background-color: transparent;
+											position: absolute;
+											right: 0.125cqw;
+											top: -0.75cqh;
+
+											&.edit {
+												i {
+													font-size: 1.75vh;
+												}
+											}
+										}
+									}
+
+									td {
+										text-align: left;
+										padding-right: 1cqw;
+
+										&.status {
+											text-align: center;
+											width: 10cqw;
+										}
+
+										&.marks {
+											text-align: center;
+											border-left: 2px solid $primary-blue;
+										}
+
+										&.totalMarks {
+											text-align: right;
+											border-left: 2px solid $primary-blue;
+										}
+									}
+								}
+							}
+
+							&[open] summary {
+								border-bottom-left-radius: 0;
+								border-bottom-right-radius: 0;
+
+								&:before {
+									content: '↑';
+								}
+							}
+
+							summary {
+								background-color: $primary-blue;
+								border-radius: 1vh;
+								color: $white;
+								font-weight: 900;
+								font-size: 2vh;
+								padding: 0.75vh 1vh;
+								cursor: pointer;
+								position: relative;
+								padding-left: calc(1.75vh + 0.75vh + 0.75vh);
+								list-style: none;
+
+								&::-webkit-details-marker {
+									display: none;
+								}
+
+								&:before {
+									position: absolute;
+									top: 50%;
+									transform: translateY(-50%);
+									left: 0.75vh;
+									content: '↓';
+									width: 1.75vh;
+									height: 1.75vh;
+									background-color: $primary-blue;
+									color: $white;
+									display: inline-flex;
+									justify-content: center;
+									align-items: center;
+									flex-shrink: 0;
+								}
+							}
+						}
+					}
+				}
+
+				button.createReport {
+					margin-top: 2.5cqh;
+					background-color: $green;
+					color: $white;
+					padding: 0.5vh 2.5vh;
+					border-radius: 1vh;
+				}
+			}
+		}
+
+		form {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			overflow-y: auto;
+			padding-top: 2vh;
+
+			.stepsIndicator {
+				display: flex;
+				height: 4vh;
+				position: absolute;
+				top: -2cqh;
+				right: 2cqw;
+				column-gap: 2.75cqw;
+				font-size: 4.5vh;
+				color: $primary-blue;
+
+				.stepIndicator {
+					list-style: circle;
+
+					&.active {
+						list-style: disc;
+					}
+				}
+			}
+
+			.formStep {
+				width: 100cqw;
+				display: none;
+
+				&.show {
+					display: block;
+				}
+
+				.stepTitle {
+					font-weight: 700;
+					font-size: 2.75vh;
+					color: $secondary-blue;
+					text-align: center;
+				}
+
+				button.changeStep {
+					background-color: $primary-blue;
+					color: $white;
+					font-size: 1.75vh;
+					font-weight: 600;
+					width: 12.5vh;
+					height: 3.25vh;
+					border-radius: 5vh;
+					border: none;
+
+					&.next {
+						float: right;
+						right: 4cqw;
+					}
+
+					&.prev {
+						left: 4cqw;
+					}
+				}
+			}
+
+			.form-fields {
+				padding: 1.25cqh 4cqw 2.5vh;
+				width: 100%;
+				display: flex;
+				flex-flow: column nowrap;
+				align-items: center;
+
+				.form-row {
+					display: flex;
+					flex-flow: row nowrap;
+					align-items: center;
+					justify-content: flex-start;
+					width: 100%;
+
+					input + input {
+						margin-left: 1cqw;
+					}
+
+					.dayChangers {
+						display: flex;
+						flex-flow: column nowrap;
+						margin-left: 0.5cqw;
+
+						button {
+							height: 2.5cqw;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							line-height: 1;
+							padding: 0.5cqw;
+
+							background-color: $primary-blue;
+							color: $white;
+
+							font-size: 2.5vh;
+
+							box-shadow: -3px 3px 3px rgba($color: $dark, $alpha: 0.4);
+
+							&:first-child {
+								border-top-left-radius: 2cqw;
+								border-top-right-radius: 2cqw;
+							}
+
+							&:last-child {
+								border-bottom-left-radius: 2cqw;
+								border-bottom-right-radius: 2cqw;
+							}
+						}
+					}
+
+					.input-group {
+						width: 100%;
+						display: flex;
+						flex-flow: column-reverse nowrap;
+						font-size: 1.75vh;
+						font-weight: 600;
+						color: $secondary-blue;
+
+						&.attendee {
+							width: 17.5cqw;
+							height: 12.5cqh;
+							text-align: center;
+							justify-content: center;
+							align-items: center;
+							flex-shrink: 0;
+
+							label.studentName {
+								font-size: 2vh;
+							}
+
+							& + .attendee {
+								margin-left: 0;
+							}
+						}
+
+						* {
+							transition: all ease-in-out 0.25s;
+						}
+
+						label.extra-info {
+							font-size: 1.5vh;
+							color: $secondary-blue;
+							font-weight: 600;
+						}
+
+						.add-groupSetItem {
+							width: 5vh;
+							padding: 0.75vh 0;
+							border-radius: 0.75vh;
+							background-color: $green;
+							color: $white;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							align-self: flex-end;
+							margin: 1.25vh 0;
+						}
+
+						.form-groupSets {
+							width: 100%;
+							display: flex;
+							flex-flow: column nowrap;
+							margin-top: 1.25vh;
+
+							.groupSet {
+								width: 100%;
+								display: flex;
+								align-items: flex-end;
+
+								& + .groupSet {
+									margin-top: 0.75vh;
+
+									&:nth-child(2) {
+										margin-top: 0;
+									}
+								}
+
+								.label {
+									font-size: 1rem;
+									font-weight: 500;
+									line-height: 0.9;
+									align-self: flex-end;
+									margin-left: 0.5vw;
+
+									& + .label {
+										margin-left: calc(+6vw);
+									}
+								}
+
+								input {
+									& + input {
+										margin-left: 1vh;
+									}
+								}
+
+								.remove-groupSetItem {
+									background-color: $danger;
+									color: $white;
+									display: flex;
+									align-items: center;
+									justify-content: center;
+									height: 4vh;
+									width: 6vh;
+									margin-left: 1vh;
+									border-radius: 0.75vh;
+
+									i {
+										font-size: 2vh;
+									}
+								}
+							}
+						}
+
+						input,
+						select,
+						textarea {
+							width: 100%;
+							font-size: 2vh;
+							color: $secondary-blue;
+							padding: 0.5vh 1vh;
+							border-style: solid;
+							border-color: #757575;
+							border-radius: 1vh;
+
+							&:focus {
+								background: linear-gradient($white 0 0) padding-box,
+									linear-gradient(to bottom, $primary-blue, $secondary-blue) border-box;
+								border: 3px solid transparent;
+
+								& + label {
+									background: linear-gradient($primary-blue, $secondary-blue);
+									-webkit-background-clip: text;
+									background-clip: text;
+									-webkit-text-fill-color: transparent;
+								}
+							}
+
+							&.is-invalid {
+								background: linear-gradient($white 0 0) padding-box,
+									linear-gradient(
+											lighten($color: $danger, $amount: 15),
+											darken($color: $danger, $amount: 15)
+										)
+										border-box;
+								border: 3px solid transparent;
+
+								& ~ label {
+									background: linear-gradient(
+										lighten($color: $danger, $amount: 15),
+										darken($color: $danger, $amount: 15)
+									);
+									-webkit-background-clip: text;
+									background-clip: text;
+									-webkit-text-fill-color: transparent;
+								}
+							}
+						}
+
+						.input-box {
+							display: flex;
+							flex-flow: row nowrap;
+							align-items: center;
+							border: solid 2px #757575;
+							padding: 0.25cqh 0.45cqh;
+							border-radius: 1vh;
+
+							.prefix {
+								color: $secondary-blue;
+								font-size: 2vh;
+								width: 6vh;
+							}
+
+							input {
+								width: 100%;
+								font-size: 2vh;
+								color: $secondary-blue;
+								padding: 0.25cqh 0.45cqh;
+								border: none;
+							}
+
+							&:focus-within {
+								background: linear-gradient($white 0 0) padding-box,
+									linear-gradient(to bottom, $primary-blue, $secondary-blue) border-box;
+								border: 3px solid transparent;
+
+								& + label {
+									background: linear-gradient($primary-blue, $secondary-blue);
+									-webkit-background-clip: text;
+									background-clip: text;
+									-webkit-text-fill-color: transparent;
+								}
+							}
+
+							&.is-invalid {
+								background: linear-gradient($white 0 0) padding-box,
+									linear-gradient(
+											lighten($color: $danger, $amount: 15),
+											darken($color: $danger, $amount: 15)
+										)
+										border-box;
+								border: 3px solid transparent;
+
+								& + label {
+									background: linear-gradient(
+										lighten($color: $danger, $amount: 15),
+										darken($color: $danger, $amount: 15)
+									);
+									-webkit-background-clip: text;
+									background-clip: text;
+									-webkit-text-fill-color: transparent;
+								}
+							}
+						}
+
+						.radio-row {
+							width: 100%;
+							display: flex;
+							flex-direction: row;
+							justify-content: center;
+
+							.radio-group {
+								display: flex;
+								flex-direction: row;
+
+								& + .radio-group {
+									margin-left: 1vh;
+								}
+
+								input {
+									width: 0;
+									height: 0;
+									visibility: hidden;
+									margin: 0;
+
+									&:checked ~ label {
+										background: $secondary-blue;
+										border-color: $secondary-blue;
+										color: $white;
+									}
+								}
+
+								label {
+									padding: 1vh;
+									width: 6vh;
+									padding: 0.5vh;
+									font-size: 3vh;
+									border-radius: 1vh;
+									border: 2px solid $secondary-blue;
+									text-align: center;
+									line-height: 0.8;
+									color: $secondary-blue;
+									transition: all ease-in-out 0.125s;
+								}
+
+								input,
+								label {
+									cursor: pointer;
+								}
+							}
+						}
+
+						select {
+							border-width: 2px;
+						}
+
+						textarea {
+							border-width: 2px;
+							resize: none;
+						}
+
+						.check-group {
+							display: flex;
+							flex-direction: row;
+							align-items: flex-start;
+							margin-top: 1vh;
+
+							input {
+								width: auto;
+
+								&:focus {
+									& + label {
+										-webkit-text-fill-color: unset;
+									}
+								}
+
+								& + label {
+									margin-left: 10px;
+									line-height: 1;
+									color: $secondary-blue;
+
+									a {
+										color: $secondary-blue;
+										font-weight: 900;
+									}
+								}
+							}
+						}
+
+						.error-alerts {
+							position: absolute;
+							width: 100%;
+							bottom: -2vh;
+							font-size: 1.5vh;
+							padding-left: 0.5vh;
+							text-align: right;
+							display: flex;
+							flex-flow: column nowrap;
+
+							* {
+								background: linear-gradient(
+									lighten($color: $danger, $amount: 15),
+									darken($color: $danger, $amount: 15)
+								);
+								-webkit-background-clip: text;
+								background-clip: text;
+								-webkit-text-fill-color: transparent;
+							}
+						}
+
+						& + .input-group {
+							margin-left: 1vh;
+						}
+					}
+
+					& + .form-row {
+						margin-top: 1vh;
+					}
+				}
+			}
+
+			button.formButton {
+				right: 4cqw;
+				background-color: $primary-blue;
+				color: $white;
+				font-size: 1.75vh;
+				font-weight: 600;
+				min-width: 12.5vh;
+				padding: 0 2cqw;
+				height: 3.25vh;
+				border-radius: 5vh;
+				border: none;
+				float: right;
+
+				&:disabled {
+					background-color: #757575;
+				}
+			}
+		}
+	}
+}

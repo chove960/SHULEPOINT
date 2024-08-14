@@ -1,0 +1,250 @@
+@import 'apps/shule-point-web-portal/src/config';
+@import 'apps/shule-point-web-portal/src/utilities';
+
+#clientDashboardPage {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-flow: column nowrap;
+
+	@include linearGradient('165deg', $honeydew, $powder-blue);
+
+	.topBar {
+		width: 100%;
+		height: 5.5vh;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		padding: 0 2vw;
+
+		.logo {
+			height: 4.75vh;
+			width: auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			svg {
+				height: 100%;
+				width: auto;
+			}
+		}
+
+		.userItems {
+			display: flex;
+			align-items: flex-end;
+			line-height: 1;
+
+			color: $secondary-blue;
+			font-size: 2.5vh;
+			font-weight: 600;
+
+			span.firstName {
+				margin-left: 0.5rem;
+				font-weight: 400;
+				font-size: 2.65vh;
+			}
+
+			span.userRole {
+				margin-left: 0.5rem;
+				font-weight: 700;
+				font-size: 2vh;
+				line-height: 1.35;
+			}
+		}
+	}
+
+	.pageBody {
+		container-type: size;
+
+		flex: 1 1 auto;
+		display: flex;
+
+		.sideNav {
+			height: 100cqh;
+			width: 25cqw;
+
+			display: flex;
+			flex-flow: column nowrap;
+			justify-content: space-between;
+
+			.schoolInfo {
+				width: 100%;
+				display: flex;
+				flex-flow: column nowrap;
+				align-items: center;
+				padding: 2cqh 0;
+				color: $primary-blue;
+				line-height: 1;
+
+				.schoolLogo {
+					overflow: hidden;
+					border-radius: 50%;
+					width: 8cqw;
+					height: 8cqw;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					background: linear-gradient($white 0 0) padding-box,
+						linear-gradient(165deg, $powder-blue, $honeydew) border-box;
+					border: 0.5cqh solid transparent;
+					margin-bottom: 2cqh;
+
+					img {
+						width: 100%;
+					}
+				}
+
+				.Name {
+					font-size: 2cqw;
+					font-weight: 500;
+				}
+
+				.ShortName {
+					font-size: 1.5cqw;
+					font-weight: 700;
+					text-transform: uppercase;
+				}
+
+				.RegNumber {
+					margin-top: 0.85cqh;
+					font-size: 1.15cqw;
+					font-weight: 400;
+				}
+			}
+
+			.navItems {
+				display: flex;
+				flex-flow: column nowrap;
+				padding: 0 2cqw;
+
+				.navItem {
+					display: flex;
+					flex-flow: row nowrap;
+					align-items: center;
+					padding-top: 1cqh;
+					padding-left: 0.25cqw;
+
+					.btn {
+						width: 100%;
+						cursor: pointer;
+						display: flex;
+						flex-flow: row nowrap;
+						align-items: flex-end;
+						transition: transform 0.15s ease-in-out;
+						transition: background 0.35s ease-in-out;
+						padding: 0.25cqh 0.75cqw;
+
+						.icon {
+							height: 2.25cqw;
+
+							svg {
+								height: 100%;
+								width: auto;
+								fill: $primary-blue;
+							}
+						}
+
+						.text {
+							font-size: 1.65cqw;
+							font-weight: 500;
+							margin-left: 1cqw;
+							text-transform: capitalize;
+							color: $primary-blue;
+							line-height: 1;
+						}
+
+						&:active {
+							transform: scale(0.95);
+						}
+
+						&:hover {
+							background-color: rgba($color: $white, $alpha: 0.45);
+							backdrop-filter: blur(10cqh);
+							border-radius: 1.5cqh;
+						}
+
+						&.active {
+							background-color: $white;
+							border-radius: 1.75cqh;
+							padding: 1.25cqh 0.75cqw 1.25cqh;
+
+							.text {
+								font-size: 1.75cqw;
+							}
+
+							.icon {
+								height: 2.5cqw;
+							}
+						}
+					}
+
+					& + .navItem {
+						margin-top: 1cqh;
+						border-top: 0.125cqw solid $primary-blue;
+					}
+				}
+			}
+
+			.functionItems {
+				display: flex;
+				padding: 0 2vw;
+
+				.btn {
+					width: 3cqw;
+					height: 3cqw;
+					padding: 1cqh;
+					cursor: pointer;
+
+					&:active {
+						transform: scale(0.95);
+					}
+
+					&:hover {
+						background-color: rgba($color: $white, $alpha: 0.45);
+						backdrop-filter: blur(10cqh);
+						border-radius: 50%;
+					}
+
+					svg {
+						fill: $primary-blue;
+						width: 100%;
+						height: auto;
+					}
+				}
+			}
+		}
+
+		.dashRouterContent {
+			height: 100cqh;
+			width: 75cqw;
+			overflow: hidden;
+			overflow-y: auto;
+			padding: 1cqh;
+
+			.router-container {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				border-radius: 2cqh;
+
+				background-color: rgba($color: $white, $alpha: 0.45);
+				backdrop-filter: blur(10cqh);
+			}
+		}
+	}
+
+	.bottomBar {
+		height: 3vh;
+		width: 100%;
+
+		.copyright {
+			position: absolute;
+			right: 2vw;
+
+			color: $primary-blue;
+			font-size: 1.125cqw;
+			font-weight: 400;
+		}
+	}
+}

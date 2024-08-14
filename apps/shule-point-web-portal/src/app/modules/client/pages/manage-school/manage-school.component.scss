@@ -1,0 +1,290 @@
+@import 'apps/shule-point-web-portal/src/config';
+@import 'apps/shule-point-web-portal/src/utilities';
+
+#ManageSchoolPage {
+	width: 100%;
+	height: 100%;
+	container-type: size;
+
+	display: flex;
+	flex-flow: column nowrap;
+	overflow: hidden;
+	overflow-y: auto;
+
+	color: $primary-blue;
+
+	align-items: center;
+
+	.backButton {
+		position: absolute;
+		top: 1cqh;
+		left: 1cqw;
+		background-color: transparent;
+		border: none;
+		color: $secondary-blue;
+		box-shadow: none;
+		padding: 0.25vh 1vh;
+		transition: background-color 0.125s ease-in-out;
+		transition: transform 0.25s ease-in-out;
+
+		svg {
+			font-size: 1.75cqw;
+		}
+
+		&:hover {
+			background-color: rgba($color: $honeydew, $alpha: 0.45);
+
+			backdrop-filter: blur(10cqh);
+			border-radius: 2rem;
+		}
+
+		&:active {
+			transform: scale(0.9);
+		}
+	}
+
+	.schoolInfoContainer {
+		width: 100%;
+		height: 25cqh;
+		background-color: rgba($color: $white, $alpha: 0.45);
+
+		backdrop-filter: blur(10cqh);
+		padding: 3cqw 5cqw;
+		box-shadow: 0cqw 0.5cqw 1cqw rgba($color: $dark, $alpha: 0.15);
+
+		display: flex;
+		flex-flow: row nowrap;
+		-moz-column-gap: 2cqw;
+		column-gap: 2cqw;
+		align-items: flex-start;
+		line-height: 1;
+
+		.schoolLogo {
+			background: linear-gradient($white 0 0) padding-box, linear-gradient(165deg, $powder-blue, $honeydew) border-box;
+			border: 0.5cqh solid transparent;
+			width: 10cqw;
+			height: 10cqw;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			overflow: hidden;
+			border-radius: 50%;
+
+			img {
+				height: 100%;
+			}
+		}
+
+		.schoolInfo {
+			display: flex;
+			flex-flow: column nowrap;
+			align-items: center;
+
+			.Name {
+				font-size: 2.125cqw;
+				font-weight: 500;
+			}
+			.ShortName {
+				font-size: 1.75cqw;
+				font-weight: 700;
+				text-transform: uppercase;
+			}
+
+			.Address {
+				width: 100%;
+				margin-top: 1.25cqw;
+				font-size: 1.25cqw;
+				font-weight: 500;
+			}
+		}
+
+		.contactInfo {
+			display: flex;
+			flex-flow: column;
+			row-gap: 0.25cqh;
+			align-self: flex-end;
+			position: absolute;
+			right: 2cqw;
+			bottom: 1cqh;
+
+			.phoneNumber {
+				font-size: 1.75cqw;
+				font-weight: 500;
+			}
+			.email {
+				font-size: 1.5cqw;
+				font-weight: 500;
+			}
+			.website {
+				font-size: 1.5cqw;
+				font-weight: 500;
+			}
+		}
+	}
+
+	.schoolPageBody {
+		width: 100cqw;
+		flex: 1 1 auto;
+		overflow: hidden;
+		overflow-y: auto;
+		display: flex;
+		flex-flow: column;
+		row-gap: 3cqh;
+		align-items: center;
+		padding: 2cqh 0;
+
+		section {
+			width: 95cqw;
+			border-radius: 3cqh;
+			background-color: rgba($color: $white, $alpha: 0.45);
+
+			backdrop-filter: blur(10cqh);
+			box-shadow: 0cqw 0.5cqw 1cqw rgba($color: $dark, $alpha: 0.15);
+			overflow: hidden;
+			display: flex;
+			flex-flow: column;
+
+			.header {
+				width: 100%;
+				height: 5cqh;
+				padding: 1cqh 2cqw;
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-end;
+
+				.title {
+					font-size: 2.5cqh;
+					font-weight: 700;
+				}
+
+				button {
+					background-color: $primary-blue;
+					color: $white;
+					border-radius: 3cqh;
+					padding: 0.45cqh 1cqw;
+
+					svg {
+						font-size: 2.5cqh;
+					}
+				}
+			}
+
+			.body {
+				overflow: hidden;
+				overflow-x: auto;
+				flex: 1 1 auto;
+				display: flex;
+				flex-flow: row;
+				column-gap: 2cqw;
+				padding: 0 2cqw;
+				container-type: size;
+
+				.noItems {
+					width: 100cqw;
+					font-size: 1.5rem;
+					font-weight: 500;
+					text-align: center;
+					height: fit-content;
+					margin-top: 25cqh;
+				}
+			}
+
+			&.GradeLevelsContainer {
+				height: 25cqh;
+
+				.gradeLevelCard {
+					flex-shrink: 0;
+					width: 22.5cqw;
+					height: 90cqh;
+					border-radius: 1vh;
+					background-color: rgba($color: $powder-blue, $alpha: 0.45);
+
+					backdrop-filter: blur(10cqh);
+					box-shadow: -0.5cqw 0.5cqw 1cqw rgba($color: $dark, $alpha: 0.15);
+					overflow: hidden;
+					display: flex;
+					flex-flow: column;
+					padding: 0.75vh 0;
+
+					.gradeLevelName {
+						font-size: 12cqh;
+						font-weight: 700;
+						padding-left: 1vw;
+
+						.delete {
+							background-color: $danger;
+							position: absolute;
+							right: 1vh;
+							padding: 0.5vh 1.25vh;
+							color: $white;
+							border-radius: 1vh;
+
+							i {
+								font-size: 2vh;
+							}
+						}
+					}
+
+					ul {
+						padding-left: 1vw;
+						width: 100%;
+						flex: 1 1 auto;
+						padding-top: 6cqh;
+						overflow-y: auto;
+						overflow-x: hidden;
+						list-style-type: '\1F4DA';
+						list-style-position: inside;
+					}
+				}
+			}
+			&.SchoolTermsContainer {
+				height: 25cqh;
+
+				.schoolTermCard {
+					flex-shrink: 0;
+					width: 22.5cqw;
+					height: 90cqh;
+					border-radius: 1vh;
+					background-color: rgba($color: $powder-blue, $alpha: 0.45);
+
+					backdrop-filter: blur(10cqh);
+					box-shadow: -0.5cqw 0.5cqw 1cqw rgba($color: $dark, $alpha: 0.15);
+					overflow: hidden;
+					display: flex;
+					flex-flow: column;
+					padding: 0.75vh 0;
+
+					.schoolTermName {
+						font-size: 12cqh;
+						font-weight: 700;
+						padding-left: 1vw;
+
+						.delete {
+							background-color: $danger;
+							position: absolute;
+							right: 1vh;
+							padding: 0.5vh 1.25vh;
+							color: $white;
+							border-radius: 1vh;
+
+							i {
+								font-size: 2vh;
+							}
+						}
+					}
+
+					ul {
+						width: 100%;
+						flex: 1 1 auto;
+						padding-left: 1vw;
+						padding-top: 6cqh;
+						overflow-y: auto;
+						overflow-x: hidden;
+						list-style-type: '\1F4DA';
+						list-style-position: inside;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,193 @@
+<div class="reference-body">
+	<div *ngIf="classroom.referenceMaterials.length < 1" class="noRecords">
+		There are no reference materials available for this classroom
+	</div>
+	<div *ngIf="classroom.referenceMaterials.length > 0" class="referenceMaterials-container">
+		<div class="accordion">
+			<details *ngFor="let material of classroom.referenceMaterials" id="{{ material.subject }}_{{ material.name }}">
+				<summary>{{ material.subject }}: {{ material.name }}</summary>
+				<div class="accordion-content">
+					<table>
+						<tr>
+							<td>name:</td>
+							<td>{{ material.name }}</td>
+						</tr>
+						<tr>
+							<td>subject:</td>
+							<td>{{ material.subject }}</td>
+						</tr>
+						<tr>
+							<td>topic:</td>
+							<td>{{ material.topic }}</td>
+						</tr>
+						<tr>
+							<td>uploaded On:</td>
+							<td>{{ material.uploadedOn }}</td>
+						</tr>
+
+						<tr>
+							<td>file:</td>
+							<td>
+								<a target="_blank" href="{{ material.file }}">{{ material.name }}.pdf</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</details>
+		</div>
+	</div>
+	<ng-template #UploadRefMaterialsModal>
+		<div class="modal w-50 h-40">
+			<div class="header">
+				<div class="title">Upload Reference Materials</div>
+				<button type="button" (click)="closeModal()" class="close">
+					<i class="fas fa-close"></i>
+				</button>
+			</div>
+			<div class="body">
+				<form (ngSubmit)="onSubmitRefMaterials(newRefMaterialsForm)" #newRefMaterialsForm="ngForm">
+					<div class="form-fields">
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									type="text"
+									name="name"
+									[(ngModel)]="newRefMaterial.name"
+									#newRefMaterialName="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newRefMaterialName.errors && newRefMaterialName.touched
+									}"
+								/>
+								<label>Name</label>
+								<div
+									*ngIf="
+										newRefMaterialName.invalid &&
+										(newRefMaterialName.dirty || newRefMaterialName.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newRefMaterialName.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="input-group">
+								<select
+									name="subject"
+									[(ngModel)]="newRefMaterial.subject"
+									#newRefMaterialSubject="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newRefMaterialSubject.errors && newRefMaterialSubject.touched
+									}"
+								>
+									<option value="">Select Subject</option>
+									<option [ngValue]="subject" *ngFor="let subject of classroom.subjects">
+										{{ subject }}
+									</option>
+								</select>
+								<label>Subject</label>
+								<div
+									*ngIf="
+										newRefMaterialSubject.invalid &&
+										(newRefMaterialSubject.dirty || newRefMaterialSubject.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newRefMaterialSubject.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+							<div class="input-group">
+								<select
+									name="type"
+									[(ngModel)]="newRefMaterial.type"
+									#newRefMaterialType="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newRefMaterialType.errors && newRefMaterialType.touched
+									}"
+								>
+									<option value="">Select Type</option>
+									<option value="Assignment">Assignment</option>
+									<option value="Chapter Notes">Chapter Notes</option>
+									<option value="Chapter Summary">Chapter Summary</option>
+									<option value="Study Guide">Study Guide</option>
+								</select>
+								<label>Type</label>
+								<div
+									*ngIf="
+										newRefMaterialType.invalid &&
+										(newRefMaterialType.dirty || newRefMaterialType.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newRefMaterialType.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+							<div class="input-group">
+								<input
+									name="topic"
+									[(ngModel)]="newRefMaterial.topic"
+									#newRefMaterialTopic="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newRefMaterialTopic.errors && newRefMaterialTopic.touched
+									}"
+								/>
+								<label>Topic</label>
+								<div
+									*ngIf="
+										newRefMaterialTopic.invalid &&
+										(newRefMaterialTopic.dirty || newRefMaterialTopic.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newRefMaterialTopic.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									type="file"
+									name="file"
+									(change)="onFileChange($event)"
+									[(ngModel)]="newRefMaterial.file"
+									#newRefMaterialFile="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newRefMaterialFile.errors && newRefMaterialFile.touched
+									}"
+									accept=".pdf"
+								/>
+								<label class="extra-info" style="line-height: 0.9; margin-bottom: 0.25rem">
+									**Accepted file type(s): .pdf
+								</label>
+								<label>File</label>
+								<div
+									*ngIf="
+										newRefMaterialFile.invalid &&
+										(newRefMaterialFile.dirty || newRefMaterialFile.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newRefMaterialFile.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button type="submit" [disabled]="!newRefMaterialsForm.form.valid" class="formButton">
+						Upload Ref. Materials
+					</button>
+				</form>
+			</div>
+		</div>
+	</ng-template>
+
+	<button title="Upload Reference Materials" (click)="openUploadRefMaterialsModal()" class="uploadRefMaterials">
+		<img src="./assets/img/navIcons/bookshelf.svg" class="classroomIcon" onload="SVGInject(this)" />
+		<i class="fas fa-plus"></i>
+	</button>
+</div>

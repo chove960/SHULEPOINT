@@ -1,0 +1,253 @@
+<div id="adminManageSchoolsPage">
+	<div *ngIf="schools.length < 1" class="noSchools">Seems No Schools Have Been Registered!</div>
+
+	<div class="schoolsContainer">
+		<div
+			*ngFor="let school of schools"
+			routerLink="../manage-schools/view-school/{{ school.registrationNumber }}"
+			class="schoolCard"
+		>
+			<div class="schoolLogo">
+				<img src="{{ school.logo }}" alt="{{ school.name }}_Logo" />
+			</div>
+			<div class="schoolInfo">
+				<div class="Name">{{ school.name }}</div>
+				<div class="ShortName">({{ school.shortName }})</div>
+				<div class="RegNumber">Reg. Number: {{ school.registrationNumber }}</div>
+			</div>
+
+			<div class="schoolAddress">
+				{{ school.address.city }}, {{ school.address.state }}, <br />
+				{{ getCountryName(school.address.country) }}
+			</div>
+		</div>
+	</div>
+
+	<ng-template #newSchoolModal>
+		<div class="modal w-40 h-70">
+			<div class="header">
+				<div class="title">Register New School</div>
+				<button type="button" (click)="closeModal()" class="close">
+					<i class="fas fa-close"></i>
+				</button>
+			</div>
+			<div class="body">
+				<form autocomplete="off" (ngSubmit)="onSubmit(newSchoolForm)" #newSchoolForm="ngForm">
+					<shule-point-web-portal-sq-image-uploader
+						(newPicEvent)="setSchoolImageValue($event)"
+					></shule-point-web-portal-sq-image-uploader>
+
+					<div class="form-fields">
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									name="schoolName"
+									type="text"
+									[(ngModel)]="newSchool.name"
+									#newSchoolName="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newSchoolName.errors && newSchoolName.touched
+									}"
+								/>
+								<label>Name</label>
+								<div
+									*ngIf="newSchoolName.invalid && (newSchoolName.dirty || newSchoolName.touched)"
+									class="error-alerts"
+								>
+									<div *ngIf="newSchoolName.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+
+							<div class="input-group" style="width: 40cqw">
+								<input
+									name="schoolShortName"
+									type="text"
+									[(ngModel)]="newSchool.shortName"
+									#newSchoolShortName="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newSchoolShortName.errors && newSchoolShortName.touched
+									}"
+								/>
+								<label>Short Name</label>
+								<div
+									*ngIf="
+										newSchoolShortName.invalid &&
+										(newSchoolShortName.dirty || newSchoolShortName.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newSchoolShortName.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+
+							<div class="input-group" style="width: 50cqw">
+								<input
+									name="schoolShortName"
+									type="text"
+									[(ngModel)]="newSchool.registrationNumber"
+									#newSchoolRegNumber="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newSchoolRegNumber.errors && newSchoolRegNumber.touched
+									}"
+								/>
+								<label>Reg. Number</label>
+								<div
+									*ngIf="
+										newSchoolRegNumber.invalid &&
+										(newSchoolRegNumber.dirty || newSchoolRegNumber.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newSchoolRegNumber.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="input-group">
+								<select
+									id="selectCountry"
+									name="country"
+									(change)="loadStates($event.target); loadPhoneCountryCode($event.target)"
+									[(ngModel)]="newSchool.address.country"
+									#newSchoolAddressCountry="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newSchoolAddressCountry.errors && newSchoolAddressCountry.touched
+									}"
+								>
+									<option value="">Select Country</option>
+								</select>
+								<label>Country</label>
+								<div
+									*ngIf="
+										newSchoolAddressCountry.invalid &&
+										(newSchoolAddressCountry.dirty || newSchoolAddressCountry.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newSchoolAddressCountry.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+							<div class="input-group">
+								<select
+									id="selectState"
+									name="state"
+									[(ngModel)]="newSchool.address.state"
+									#newSchoolAddressState="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newSchoolAddressState.errors && newSchoolAddressState.touched
+									}"
+								>
+									<option value="">Select State</option>
+								</select>
+								<label>State</label>
+								<div
+									*ngIf="
+										newSchoolAddressState.invalid &&
+										(newSchoolAddressState.dirty || newSchoolAddressState.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newSchoolAddressState.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+							<div class="input-group">
+								<input
+									name="city"
+									type="text"
+									[(ngModel)]="newSchool.address.city"
+									#newSchoolAddressCity="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newSchoolAddressCity.errors && newSchoolAddressCity.touched
+									}"
+								/>
+								<label>City</label>
+								<div
+									*ngIf="
+										newSchoolAddressCity.invalid &&
+										(newSchoolAddressCity.dirty || newSchoolAddressCity.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newSchoolAddressCity.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="input-group">
+								<div
+									id="inputMobileNumber"
+									class="input-box"
+									[ngClass]="{
+										'is-invalid': newSchoolPhoneNumber.errors && newSchoolPhoneNumber.touched
+									}"
+								>
+									<span class="prefix"></span>
+									<input
+										name="phoneNumber"
+										type="tel"
+										[(ngModel)]="newSchool.phoneNumber"
+										#newSchoolPhoneNumber="ngModel"
+										required
+									/>
+								</div>
+
+								<label>Phone Number</label>
+								<div
+									*ngIf="
+										newSchoolPhoneNumber.invalid &&
+										(newSchoolPhoneNumber.dirty || newSchoolPhoneNumber.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newSchoolPhoneNumber.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									name="email"
+									type="email"
+									[(ngModel)]="newSchool.email"
+									#newSchoolEmail="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newSchoolEmail.errors && newSchoolEmail.touched
+									}"
+								/>
+								<label>Email</label>
+								<div
+									*ngIf="newSchoolEmail.invalid && (newSchoolEmail.dirty || newSchoolEmail.touched)"
+									class="error-alerts"
+								>
+									<div *ngIf="newSchoolEmail.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="input-group">
+								<input name="website" type="url" [(ngModel)]="newSchool.website" #newSchoolEmail="ngModel" />
+								<label>Website</label>
+							</div>
+						</div>
+					</div>
+					<button type="submit" [disabled]="!newSchoolForm.form.valid" class="formButton">Register School</button>
+				</form>
+			</div>
+		</div>
+	</ng-template>
+
+	<button title="Register New School" (click)="openModal()" class="addSchool">
+		<img src="./assets/img/navIcons/schools.svg" class="schoolIcon" onload="SVGInject(this)" />
+		<i class="fas fa-plus"></i>
+	</button>
+</div>

@@ -1,0 +1,22 @@
+<div class="image-uploader">
+	<div class="pic-container">
+		<img [src]="croppedImage" id="pic" alt="Picture" />
+	</div>
+	<button (click)="uploadImage($event)" class="btn-pic">
+		<i class="fa-solid fa-camera"></i>
+	</button>
+	<input type="file" (change)="fileChangeEvent($event)" id="pic-upload" />
+</div>
+
+<div class="image-editor">
+	<image-cropper
+		[imageChangedEvent]="imageChangedEvent"
+		[maintainAspectRatio]="true"
+		[aspectRatio]="4 / 4"
+		[resizeToWidth]="128"
+		format="png"
+		(imageCropped)="imageCropped($event)"
+	></image-cropper>
+
+	<button class="btn" type="button" (click)="saveImage()">Save</button>
+</div>

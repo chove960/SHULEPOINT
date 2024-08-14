@@ -1,0 +1,177 @@
+<div id="ManageStaffsPage">
+	<div *ngIf="staffs.length < 1" class="noStaffs">No Staffs Have Been Registered To Your School Yet!</div>
+	<div class="staffsContainer">
+		<div *ngFor="let staff of staffs" class="staffCard">
+			<div class="staffInfo">
+				<h2>{{ staff.firstName }} {{ staff.lastName }}</h2>
+				{{ staff.username }} <br />
+				{{ staff.userRole }}
+			</div>
+		</div>
+	</div>
+
+	<ng-template #newStaffModal>
+		<div class="modal w-40 h-70">
+			<div class="header">
+				<div class="title">Register New Staff</div>
+				<button type="button" (click)="closeModal()" class="close">
+					<i class="fas fa-close"></i>
+				</button>
+			</div>
+			<div class="body">
+				<form autocomplete="off" (ngSubmit)="onSubmitStaff(newStaffForm)" #newStaffForm="ngForm">
+					<div class="form-fields">
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									name="firstName"
+									type="text"
+									[(ngModel)]="newStaff.firstName"
+									#newStaffFirstName="ngModel"
+									required
+									minlength="3"
+									[ngClass]="{
+										'is-invalid': newStaffFirstName.errors && newStaffFirstName.touched
+									}"
+								/>
+								<label>First Name</label>
+								<div
+									*ngIf="
+										newStaffFirstName.invalid && (newStaffFirstName.dirty || newStaffFirstName.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newStaffFirstName.errors?.['required']">this is required!</div>
+									<div *ngIf="newStaffFirstName.errors?.['minlength']">too short!</div>
+								</div>
+							</div>
+							<div class="input-group">
+								<input
+									name="lastName"
+									type="text"
+									[(ngModel)]="newStaff.lastName"
+									#newStaffLastName="ngModel"
+									required
+									minlength="3"
+									[ngClass]="{
+										'is-invalid': newStaffLastName.errors && newStaffLastName.touched
+									}"
+								/>
+								<label>Last Name</label>
+								<div
+									*ngIf="newStaffLastName.invalid && (newStaffLastName.dirty || newStaffLastName.touched)"
+									class="error-alerts"
+								>
+									<div *ngIf="newStaffLastName.errors?.['required']">this is required!</div>
+									<div *ngIf="newStaffLastName.errors?.['minlength']">too short!</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									name="username"
+									autocomplete="no"
+									type="text"
+									[(ngModel)]="newStaff.username"
+									#newStaffUsername="ngModel"
+									required
+									minlength="3"
+									[ngClass]="{
+										'is-invalid': newStaffUsername.errors && newStaffUsername.touched
+									}"
+								/>
+								<label>Username</label>
+								<div
+									*ngIf="newStaffUsername.invalid && (newStaffUsername.dirty || newStaffUsername.touched)"
+									class="error-alerts"
+								>
+									<div *ngIf="newStaffUsername.errors?.['required']">this is required!</div>
+									<div *ngIf="newStaffUsername.errors?.['minlength']">too short!</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									name="email"
+									type="email"
+									[(ngModel)]="newStaff.email"
+									#newStaffEmail="ngModel"
+									required
+									pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+									[ngClass]="{
+										'is-invalid': newStaffEmail.errors && newStaffEmail.touched
+									}"
+								/>
+								<label>Email</label>
+								<div
+									*ngIf="newStaffEmail.invalid && (newStaffEmail.dirty || newStaffEmail.touched)"
+									class="error-alerts"
+								>
+									<div *ngIf="newStaffEmail.errors?.['required']">this is required!</div>
+									<div *ngIf="newStaffEmail.errors?.['pattern']">not valid email</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									name="password"
+									autocomplete="new-password"
+									type="password"
+									[(ngModel)]="newStaff.password"
+									#newStaffPassword="ngModel"
+									required
+									minlength="8"
+									[ngClass]="{
+										'is-invalid': newStaffPassword.errors && newStaffPassword.touched
+									}"
+								/>
+								<label>Password</label>
+								<div
+									*ngIf="newStaffPassword.invalid && (newStaffPassword.dirty || newStaffPassword.touched)"
+									class="error-alerts"
+								>
+									<div *ngIf="newStaffPassword.errors?.['required']">this is required!</div>
+									<div *ngIf="newStaffPassword.errors?.['minlength']">too short!</div>
+								</div>
+							</div>
+							<div class="input-group">
+								<input
+									name="confirmPassword"
+									type="password"
+									[(ngModel)]="newStaff.confirmPassword"
+									#newStaffConfirmPassword="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid':
+											newStaffConfirmPassword.touched &&
+											newStaffConfirmPassword.value !== newStaffPassword.value
+									}"
+								/>
+								<label>Confirm Password</label>
+								<div
+									*ngIf="
+										newStaffConfirmPassword.value !== newStaffPassword.value &&
+										(newStaffConfirmPassword.dirty || newStaffConfirmPassword.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newStaffConfirmPassword.errors?.['required']">this is required!</div>
+									<div *ngIf="newStaffConfirmPassword.value !== newStaffPassword.value">must match!</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button type="submit" [disabled]="!newStaffForm.form.valid" class="formButton">Register Staff</button>
+				</form>
+			</div>
+		</div>
+	</ng-template>
+
+	<button title="Register New Staff" (click)="openModal()" class="addStaff">
+		<img src="./assets/img/navIcons/teachers.svg" class="staffIcon" onload="SVGInject(this)" />
+		<i class="fas fa-plus"></i>
+	</button>
+</div>

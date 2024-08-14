@@ -1,0 +1,146 @@
+<div id="ManageClassroomsPage">
+	<div *ngIf="classrooms.length < 1" class="noClassrooms">No Classrooms Have Been Created For Your School Yet!</div>
+	<div class="classroomsContainer">
+		<div
+			*ngFor="let classroom of classrooms"
+			routerLink="../manage-classrooms/view-classroom/{{ classroom._id }}"
+			class="classroomCard"
+		>
+			<div class="classroomInfo">
+				<h2>
+					{{ classroom.name }} &nbsp; <span>({{ classroom.gradeLevel }})</span>
+				</h2>
+				Class Teacher: {{ classroom.classTeacher.teacherName }} <br />
+				Students: {{ getSeatsFilled(classroom.students) }}/{{ classroom.students.length }}
+			</div>
+		</div>
+	</div>
+
+	<ng-template #newClassroomModal>
+		<div class="modal w-30 h-30">
+			<div class="header">
+				<div class="title">Create New Classroom</div>
+				<button type="button" (click)="closeModal()" class="close">
+					<i class="fas fa-close"></i>
+				</button>
+			</div>
+			<div class="body">
+				<form (ngSubmit)="onSubmitClassroom(newClassroomForm)" #newClassroomForm="ngForm">
+					<div class="form-fields">
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									name="gradeLevelName"
+									type="text"
+									[(ngModel)]="newClassroom.name"
+									#newClassroomName="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newClassroomName.errors && newClassroomName.touched
+									}"
+								/>
+								<label>Name</label>
+								<div
+									*ngIf="newClassroomName.invalid && (newClassroomName.dirty || newClassroomName.touched)"
+									class="error-alerts"
+								>
+									<div *ngIf="newClassroomName.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+
+							<div class="input-group" style="width: 65cqw">
+								<select
+									name="classroomGradeLevel"
+									[(ngModel)]="newClassroom.gradeLevel"
+									#newClassroomGradeLevel="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newClassroomGradeLevel.errors && newClassroomGradeLevel.touched
+									}"
+								>
+									<option selected value="">Select Grade Level</option>
+									<option *ngFor="let gradeLevel of school.gradeLevels" [ngValue]="gradeLevel.name">
+										{{ gradeLevel.name }}
+									</option>
+								</select>
+								<label>Grade Level</label>
+								<div
+									*ngIf="
+										newClassroomGradeLevel.invalid &&
+										(newClassroomGradeLevel.dirty || newClassroomGradeLevel.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newClassroomGradeLevel.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="input-group" style="width: 35cqw">
+								<select
+									name="classroomSize"
+									[(ngModel)]="classroomSize"
+									#newClassroomSize="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newClassroomSize.errors && newClassroomSize.touched
+									}"
+								>
+									<option value="">0</option>
+									<option *ngFor="let size of classroomSizes" [ngValue]="size">{{ size }}</option>
+								</select>
+								<label>Size</label>
+								<div
+									*ngIf="newClassroomSize.invalid && (newClassroomSize.dirty || newClassroomSize.touched)"
+									class="error-alerts"
+								>
+									<div *ngIf="newClassroomSize.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+							<div class="input-group">
+								<select
+									name="classTeacher"
+									[(ngModel)]="newClassroom.classTeacher"
+									#newClassroomClassTeacher="ngModel"
+									required
+									[ngClass]="{
+										'is-invalid': newClassroomClassTeacher.errors && newClassroomClassTeacher.touched
+									}"
+								>
+									<option [ngValue]="">Select Class Teacher</option>
+									<option
+										*ngFor="let teacher of teachers"
+										[ngValue]="{
+											teacherName: teacher.firstName + ' ' + teacher.lastName,
+											teacherID: teacher._id
+										}"
+									>
+										{{ teacher.firstName }} {{ teacher.lastName }}
+									</option>
+								</select>
+								<label>Class Teacher</label>
+								<div
+									*ngIf="
+										newClassroomClassTeacher.invalid &&
+										(newClassroomClassTeacher.dirty || newClassroomClassTeacher.touched)
+									"
+									class="error-alerts"
+								>
+									<div *ngIf="newClassroomClassTeacher.errors?.['required']">this is required!</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button type="submit" [disabled]="!newClassroomForm.form.valid" class="formButton">
+						Create Classroom
+					</button>
+				</form>
+			</div>
+		</div>
+	</ng-template>
+
+	<button title="Create New Classroom" (click)="openModal()" class="addClassroom">
+		<img src="./assets/img/navIcons/classrooms.svg" class="classroomIcon" onload="SVGInject(this)" />
+		<i class="fas fa-plus"></i>
+	</button>
+</div>

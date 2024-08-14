@@ -1,0 +1,170 @@
+<div class="class-chart">
+	<div class="teachers">
+		<div class="classTeacher">
+			<img src="./assets/img/seats/teacher_desk.svg" onload="SVGInject(this)" />
+		</div>
+	</div>
+	<div class="students">
+		<div
+			*ngFor="let student of classroom.students"
+			[ngClass]="{ empty: !student.filled }"
+			(click)="openStudentSeatModal(student.seatNumber)"
+			class="student"
+		>
+			<img src="./assets/img/seats/student_desk.svg" onload="SVGInject(this)" />
+			<div class="seatNumber">
+				{{ student.seatNumber }}
+			</div>
+
+			<div class="tooltip">Seat Occupant: {{ student.studentName || 'Empty' }}</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #assignStudentModal>
+	<div class="modal w-40 h-20">
+		<div class="header">
+			<div class="title">Assign Student Seat</div>
+			<button type="button" (click)="closeModal()" class="close">
+				<i class="fas fa-close"></i>
+			</button>
+		</div>
+		<div class="body">
+			<form (ngSubmit)="onSubmitSeatAssignment(newAttendanceForm)" #newAttendanceForm="ngForm">
+				<div class="form-fields">
+					<div class="form-row">
+						<div class="input-group" style="width: 17.5cqw">
+							<input
+								name="seatAssignmentSeatNumber"
+								type="text"
+								[(ngModel)]="newSeatAssignment.seatNumber"
+								#newSeatAssignmentSeatNumber="ngModel"
+								disabled
+							/>
+							<label>Seat Number</label>
+						</div>
+
+						<div class="input-group">
+							<select
+								name="seatAssignmentStudentID"
+								[(ngModel)]="newSeatAssignment.studentID"
+								#newSeatAssignmentStudentID="ngModel"
+								required
+								(ngModelChange)="setStudentName($event)"
+								[ngClass]="{
+									'is-invalid': newSeatAssignmentStudentID.errors && newSeatAssignmentStudentID.touched
+								}"
+							>
+								<option selected value="">Select Student</option>
+								<option *ngFor="let student of availableStudents" [ngValue]="student._id">
+									{{ student.fullname }}
+								</option>
+							</select>
+							<label>Student</label>
+							<div
+								*ngIf="
+									newSeatAssignmentStudentID.invalid &&
+									(newSeatAssignmentStudentID.dirty || newSeatAssignmentStudentID.touched)
+								"
+								class="error-alerts"
+							>
+								<div *ngIf="newSeatAssignmentStudentID.errors?.['required']">this is required!</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<button type="submit" [disabled]="!newAttendanceForm.form.valid" class="formButton">Assign Seat</button>
+			</form>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #viewStudentModal>
+	<div class="modal w-50 h-70">
+		<div class="header">
+			<div class="title">View Student</div>
+			<button type="button" (click)="closeModal()" class="close">
+				<i class="fas fa-close"></i>
+			</button>
+		</div>
+		<div class="body">
+			<div class="studentInformation">
+				<div class="personalInformation">
+					<div class="studentPhoto">
+						<img src="{{ currentStudent.photo }}" alt="studentPhoto" />
+					</div>
+					<div class="details">
+						<div class="detail">
+							<div class="label">Full Name:</div>
+							{{ currentStudent.fullname }}
+						</div>
+						<div class="detail">
+							<div class="label">Grade Level:</div>
+							{{ currentStudent.gradeLevel }}
+						</div>
+						<div class="detail">
+							<div class="label">Gender:</div>
+							{{ currentStudent.gender.toUpperCase() }}
+						</div>
+						<div class="detail">
+							<div class="label">Age:</div>
+							{{ getAge(currentStudent.dateOfBirth) }}
+						</div>
+						<div class="detail">
+							<div class="label">Address:</div>
+							{{ currentStudent.address.streetAddress }}, <br />
+							{{ currentStudent.address.city }}
+						</div>
+					</div>
+				</div>
+
+				<div class="parentalInformation">
+					<div class="parentInfo">
+						<div class="title">Father's Information</div>
+						<div class="details">
+							<div class="detail">
+								<div class="label">Full Name:</div>
+								{{ currentStudent.parentalInformation.fatherInfo.fullname }}
+							</div>
+							<div class="detail">
+								<div class="label">Contact Number:</div>
+								{{ currentStudent.parentalInformation.fatherInfo.phoneNumber }}
+							</div>
+							<div class="detail">
+								<div class="label">Email:</div>
+								{{ currentStudent.parentalInformation.fatherInfo.email }}
+							</div>
+							<div class="detail">
+								<div class="label">Address:</div>
+								{{ currentStudent.parentalInformation.fatherInfo.address.streetAddress }}, <br />
+								{{ currentStudent.parentalInformation.fatherInfo.address.city }}
+							</div>
+						</div>
+					</div>
+					<div class="parentInfo">
+						<div class="title">Mother's Information</div>
+						<div class="details">
+							<div class="detail">
+								<div class="label">Full Name:</div>
+								{{ currentStudent.parentalInformation.motherInfo.fullname }}
+							</div>
+							<div class="detail">
+								<div class="label">Contact Number:</div>
+								{{ currentStudent.parentalInformation.motherInfo.phoneNumber }}
+							</div>
+							<div class="detail">
+								<div class="label">Email:</div>
+								{{ currentStudent.parentalInformation.motherInfo.email }}
+							</div>
+							<div class="detail">
+								<div class="label">Address:</div>
+								{{ currentStudent.parentalInformation.motherInfo.address.streetAddress }}, <br />
+								{{ currentStudent.parentalInformation.motherInfo.address.city }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>

@@ -1,0 +1,145 @@
+@import 'apps/shule-point-web-portal/src/config';
+@import 'apps/shule-point-web-portal/src/utilities';
+
+.reference-body {
+	width: 100cqw;
+	height: 65cqh;
+	overflow: hidden;
+	overflow-y: auto;
+	display: flex;
+	justify-content: center;
+	padding: 0 1vw;
+	.noRecords {
+		margin-top: 20cqh;
+		width: 100cqw;
+		font-size: 2.5cqw;
+		font-weight: 500;
+		text-align: center;
+	}
+
+	button.uploadRefMaterials {
+		position: absolute;
+		bottom: 2cqh;
+		right: 2cqh;
+
+		width: 8cqw;
+		height: 4.5cqw;
+		border-radius: 5cqh;
+
+		background: $primary-blue;
+		color: $white;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:hover {
+			-webkit-filter: brightness(115%);
+			filter: brightness(115%);
+		}
+
+		.classroomIcon {
+			fill: $white;
+			width: 2.75cqw;
+			position: absolute;
+		}
+
+		svg.svg-inline--fa {
+			top: -1.5cqh;
+			right: -1.5cqw;
+
+			font-size: 1.35cqw;
+
+			background-color: $white;
+			fill: $primary-blue;
+
+			border-radius: 50%;
+
+			color: $primary-blue;
+		}
+	}
+
+	.referenceMaterials-container {
+		.accordion {
+			color: $secondary-blue;
+			width: 100cqw;
+			height: 65cqh;
+			overflow-y: auto;
+
+			display: flex;
+			flex-flow: row wrap;
+
+			row-gap: 1vh;
+			column-gap: 1.25vw;
+			align-content: flex-start;
+			justify-items: center;
+			padding: 1vh 2vw;
+
+			summary {
+				display: flex;
+				flex-flow: row wrap;
+				width: 30cqw;
+
+				button {
+					padding: 0.75vh 1.5vh;
+					background-color: $danger;
+					color: $white;
+					border-radius: 0.5vh;
+				}
+			}
+
+			details {
+				.accordion-content {
+					border-left: 2px solid $primary-blue;
+					border-right: 2px solid $primary-blue;
+					border-bottom: 2px solid $primary-blue;
+					padding: 1.5vh;
+					border-bottom-left-radius: 1vh;
+					border-bottom-right-radius: 1vh;
+				}
+
+				&[open] summary {
+					border-bottom-left-radius: 0;
+					border-bottom-right-radius: 0;
+
+					&:before {
+						content: '↑';
+					}
+				}
+
+				summary {
+					background-color: $primary-blue;
+					border-radius: 1vh;
+					color: $white;
+					font-weight: 900;
+					font-size: 2vh;
+					padding: 0.75vh 1vh;
+					cursor: pointer;
+					position: relative;
+					padding-left: calc(1.75vh + 0.75vh + 0.75vh);
+					list-style: none;
+
+					&::-webkit-details-marker {
+						display: none;
+					}
+
+					&:before {
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+						left: 0.75vh;
+						content: '↓';
+						width: 1.75vh;
+						height: 1.75vh;
+						background-color: $primary-blue;
+						color: $white;
+						display: inline-flex;
+						justify-content: center;
+						align-items: center;
+						flex-shrink: 0;
+					}
+				}
+			}
+		}
+	}
+}

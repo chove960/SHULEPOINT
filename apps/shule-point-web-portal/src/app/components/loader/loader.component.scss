@@ -1,0 +1,17 @@
+@import 'apps/shule-point-web-portal/src/config';
+
+.spinner-container {
+	width: 100vw;
+	height: 100vh;
+	background: rgba($color: $dark, $alpha: 0.8);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.lottie-animation {
+		width: 60vh;
+		height: 60vh;
+		border-radius: 50%;
+		overflow: hidden;
+	}
+}

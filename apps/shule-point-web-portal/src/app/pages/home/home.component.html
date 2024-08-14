@@ -1,0 +1,57 @@
+<main id="homePage">
+	<div class="logo">
+		<img src="./assets/img/LogoMain.svg" alt="ShulePointLogo" />
+	</div>
+
+	<div class="content">
+		<div class="landing-content">
+			<div class="mainText">
+				students management <br />
+				made <span>EASY!!</span>
+			</div>
+			<div class="extraText">
+				Enrol students in classes and <br />
+				manage their educational progress <br />
+				with just a few clicks.
+			</div>
+			<div class="character">
+				<img src="./assets/img/characters/managerSitting.svg" onload="SVGInject(this)" />
+			</div>
+		</div>
+		<div class="userCredentialContent">
+			<div class="loginContainer">
+				<form (ngSubmit)="onSubmit(signInForm)" #signInForm="ngForm">
+					<div class="form-fields">
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									name="username"
+									type="text"
+									[(ngModel)]="user.username"
+									#userUsername="ngModel"
+									required
+								/>
+								<label>Username</label>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="input-group">
+								<input
+									name="password"
+									type="password"
+									[(ngModel)]="user.password"
+									#userPassword="ngModel"
+									required
+								/>
+								<label>Password</label>
+							</div>
+						</div>
+					</div>
+					<button type="submit" [disabled]="!signInForm.form.valid" class="sign-in">Sign In</button>
+				</form>
+			</div>
+			<div class="resetPassword">Forgot your password? <a routerLink="/resetPassword">Reset Password</a></div>
+		</div>
+	</div>
+	<div class="copyright">Copyrights &copy; 2022 ShulePoint&trade;</div>
+</main>

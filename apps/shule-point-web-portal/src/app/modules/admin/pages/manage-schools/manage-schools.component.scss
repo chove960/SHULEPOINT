@@ -1,0 +1,145 @@
+@import 'apps/shule-point-web-portal/src/config';
+@import 'apps/shule-point-web-portal/src/utilities';
+
+#adminManageSchoolsPage {
+	width: 100%;
+	height: 100%;
+	container-type: size;
+
+	display: flex;
+	flex-flow: column nowrap;
+	padding: 1cqh;
+
+	color: $primary-blue;
+
+	.noSchools {
+		margin-top: 20cqh;
+		width: 100%;
+		font-size: 3cqw;
+		font-weight: 500;
+		text-align: center;
+	}
+
+	.schoolsContainer {
+		flex: 1 1 auto;
+		display: flex;
+		flex-flow: row wrap;
+		row-gap: 6cqh;
+		column-gap: 2cqw;
+		overflow: hidden;
+		overflow-y: auto;
+		padding: 5cqw 2cqw 3cqw;
+		align-content: flex-start;
+
+		.schoolCard {
+			flex-shrink: 0;
+
+			width: 30cqw;
+			height: 15cqw;
+			background-color: rgba($color: $white, $alpha: 0.45);
+			backdrop-filter: blur(10cqh);
+			border-radius: 1rem;
+			padding: 1cqw 1.25cqw;
+			box-shadow: -0.5cqw 0.5cqw 1cqw rgba($color: $dark, $alpha: 0.35);
+			cursor: pointer;
+			transition: transform ease-in-out 0.15s;
+
+			&:hover {
+				transform: scale(1.05);
+			}
+
+			&:active {
+				transform: scale(1.025);
+			}
+
+			.schoolLogo {
+				background: linear-gradient($white 0 0) padding-box,
+					linear-gradient(165deg, $powder-blue, $honeydew) border-box;
+				border: 0.5cqh solid transparent;
+				width: 10cqw;
+				height: 10cqw;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				overflow: hidden;
+				border-radius: 50%;
+				position: absolute;
+				top: -4cqh;
+				right: 2cqw;
+
+				img {
+					height: 100%;
+				}
+			}
+
+			.schoolInfo {
+				display: flex;
+				flex-flow: column nowrap;
+				width: 16cqw;
+				align-items: center;
+				line-height: 1;
+				text-align: center;
+				overflow: hidden;
+
+				.Name {
+					font-size: 2.125cqw;
+					font-weight: 500;
+				}
+				.ShortName {
+					font-size: 1.75cqw;
+					font-weight: 700;
+					text-transform: uppercase;
+				}
+			}
+
+			.schoolAddress {
+				margin-top: 1.25cqw;
+				font-size: 1.25cqw;
+				font-weight: 500;
+				line-height: 1;
+			}
+		}
+	}
+
+	button.addSchool {
+		position: absolute;
+		bottom: 2cqh;
+		right: 2cqh;
+
+		width: 8cqw;
+		height: 4.5cqw;
+		border-radius: 5cqh;
+
+		background: $primary-blue;
+		color: $white;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:hover {
+			-webkit-filter: brightness(115%);
+			filter: brightness(115%);
+		}
+
+		.schoolIcon {
+			fill: $white;
+			width: 3cqw;
+			position: absolute;
+		}
+
+		svg.svg-inline--fa {
+			top: -1cqh;
+			right: -1.5cqw;
+
+			font-size: 1.35cqw;
+
+			background-color: $white;
+			fill: $primary-blue;
+
+			border-radius: 50%;
+
+			color: $primary-blue;
+		}
+	}
+}

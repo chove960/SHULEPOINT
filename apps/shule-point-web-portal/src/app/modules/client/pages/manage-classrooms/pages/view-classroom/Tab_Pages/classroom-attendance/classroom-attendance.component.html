@@ -1,0 +1,122 @@
+<div class="attendance-body">
+	<div class="calendar-wrapper">
+		<header>
+			<p class="current-date"></p>
+			<div class="icons">
+				<i id="prev" class="fas fa-chevron-left"></i>
+				&nbsp; &nbsp;
+				<i id="next" class="fas fa-chevron-right"></i>
+			</div>
+		</header>
+		<div class="calendar">
+			<ul class="weeks">
+				<li>Sun</li>
+				<li>Mon</li>
+				<li>Tue</li>
+				<li>Wed</li>
+				<li>Thu</li>
+				<li>Fri</li>
+				<li>Sat</li>
+			</ul>
+			<ul class="days"></ul>
+		</div>
+	</div>
+
+	<div class="attendance-wrapper">
+		<header>Attendance For <span id="currentViewAttendanceDate"></span></header>
+
+		<div class="attendance">
+			<div *ngIf="currAttendance.length < 1" class="noRecords">Attendance Not Taken!</div>
+
+			<button
+				*ngIf="currAttendance.length < 1"
+				title="Create New Attendance"
+				(click)="openCreateAttendanceModal()"
+				class="createAttendance"
+			>
+				<img src="./assets/img/navIcons/calendar.svg" class="classroomIcon" onload="SVGInject(this)" />
+				<i class="fas fa-plus"></i>
+			</button>
+
+			<div *ngIf="currAttendance.length > 0" class="attendanceList">
+				<table>
+					<tr>
+						<th>Student</th>
+						<th>Present</th>
+					</tr>
+					<tr *ngFor="let attendee of currAttendance">
+						<td>{{ attendee.studentName }}</td>
+						<td class="status">
+							<i *ngIf="attendee.status === 'present'" class="fas fa-check"></i>
+							<i *ngIf="attendee.status === 'absent'" class="fas fa-close"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #createAttendanceModal>
+	<div class="modal w-50 h-70">
+		<div class="header">
+			<div class="title">Create Attendance</div>
+			<button type="button" (click)="closeModal()" class="close">
+				<i class="fas fa-close"></i>
+			</button>
+		</div>
+		<div class="body">
+			<form (ngSubmit)="onSubmitAttendance(newAttendanceForm)" #newAttendanceForm="ngForm">
+				<div class="form-fields">
+					<div class="form-row" style="justify-content: center">
+						<div class="input-group" style="width: 50cqw">
+							<label
+								>Attendance For {{ newAttendance.date.day }} {{ newAttendance.date.month }},{{
+									newAttendance.date.year
+								}}</label
+							>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="input-group">
+							<div class="form-row" style="flex-wrap: wrap">
+								<div *ngFor="let attendee of newAttendance.attendees" class="input-group attendee">
+									<div class="radio-row">
+										<div class="radio-group">
+											<input
+												required
+												type="radio"
+												value="present"
+												name="{{ attendee.studentID }}_attendance"
+												id="{{ attendee.studentID }}_attendanceRadioPresent"
+												[(ngModel)]="attendee.status"
+											/>
+											<label for="{{ attendee.studentID }}_attendanceRadioPresent">
+												<i class="fas fa-check"></i>
+											</label>
+										</div>
+										<div class="radio-group">
+											<input
+												type="radio"
+												value="absent"
+												name="{{ attendee.studentID }}_attendance"
+												id="{{ attendee.studentID }}_attendanceRadioAbsent"
+												[(ngModel)]="attendee.status"
+											/>
+											<label for="{{ attendee.studentID }}_attendanceRadioAbsent">
+												<i class="fas fa-close"></i>
+											</label>
+										</div>
+									</div>
+									<label class="studentName">{{ attendee.studentName }}</label>
+								</div>
+							</div>
+							<label>Students</label>
+						</div>
+					</div>
+				</div>
+				<button type="submit" [disabled]="!newAttendanceForm.form.valid" class="formButton">Save Attendance</button>
+			</form>
+		</div>
+	</div>
+</ng-template>

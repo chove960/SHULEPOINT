@@ -1,0 +1,68 @@
+@import 'apps/shule-point-web-portal/src/config';
+@import 'apps/shule-point-web-portal/src/utilities';
+
+.noRecords {
+	margin-top: 20cqh;
+	width: 100cqw;
+	font-size: 2.5cqw;
+	font-weight: 500;
+	text-align: center;
+}
+
+.reports-body {
+	width: 100cqw;
+	height: 65cqh;
+	overflow: hidden;
+	overflow-y: auto;
+	display: flex;
+	justify-content: center;
+	padding: 0 1vw;
+
+	.students {
+		height: 55cqh;
+		display: flex;
+		flex-flow: row wrap;
+		padding: 1cqh 1cqw;
+		overflow: hidden;
+		overflow-y: auto;
+		align-content: flex-start;
+		row-gap: 1.25cqh;
+
+		.student {
+			display: flex;
+			justify-content: flex-start;
+			cursor: pointer;
+			padding: 0.75cqh;
+			width: 20cqw;
+			transition: all ease-in-out 0.25s;
+			transition: transform ease-in-out 0.125s;
+
+			svg {
+				width: 6cqw;
+				height: auto;
+				fill: $primary-blue;
+			}
+
+			&:nth-child(2n + 1) {
+				margin-left: 3cqw;
+			}
+
+			.studentName {
+				font-size: 2cqh;
+
+				font-weight: 700;
+				color: $secondary-blue;
+			}
+
+			&:hover {
+				background-color: rgba($color: $powder-blue, $alpha: 0.45);
+				box-shadow: -4px 4px 10px rgba($color: $dark, $alpha: 0.35);
+				border-radius: 1cqh;
+			}
+
+			&:active {
+				transform: scale(0.98);
+			}
+		}
+	}
+}
